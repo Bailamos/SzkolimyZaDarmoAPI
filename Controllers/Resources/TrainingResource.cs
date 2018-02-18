@@ -13,6 +13,7 @@ namespace Szkolimy_za_darmo_api.Controllers.Resources
 
         public TrainingResource() {
             types = new Collection<TrainingTypeResource>();
+
         }
     }
 }

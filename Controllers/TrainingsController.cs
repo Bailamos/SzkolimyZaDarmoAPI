@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Szkolimy_za_darmo_api.Controllers.Resources;
+using Szkolimy_za_darmo_api.Controllers.Resources.Save;
 using Szkolimy_za_darmo_api.Core.Interfaces;
 using Szkolimy_za_darmo_api.Core.Models;
 
@@ -23,16 +24,17 @@ namespace Szkolimy_za_darmo_api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> createTraining([FromBody] Training training)
-        {
+        public async Task<IActionResult> createTraining([FromBody] SaveTrainingResource trainingResource)
+        {   
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
+            Training training = mapper.Map<SaveTrainingResource,Training>(trainingResource);
             training.LastUpdate = DateTime.Now;
             trainingRepository.Add(training);
             await unitOfWork.CompleteAsync();
 
             Training trainingToMap = await trainingRepository.GetOne(training.Id);
-            TrainingResource response = mapper.Map<Training, TrainingResource>(trainingToMap);
+            var response = mapper.Map<Training, TrainingResource>(trainingToMap);
             return Ok(response);
         }
     }
