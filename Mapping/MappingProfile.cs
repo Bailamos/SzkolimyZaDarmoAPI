@@ -16,9 +16,6 @@ namespace Szkolimy_za_darmo_api.Mapping
                     trainingResource => trainingResource.types, 
                     opt => opt.MapFrom(v => v.Types.Select(
                         vf => new TrainingTypeResource {TypeName = vf.TypeName})))
-                // .ForMember(
-                //     trainingResource => trainingResource.types, 
-                //     opt => opt.Ignore())
                 .ForMember(trainingResource => trainingResource.Id, opt => opt.MapFrom(training => training.Id))
                 .ForMember(trainingResource => trainingResource.LastUpdate, opt => opt.MapFrom(training => training.LastUpdate));
 

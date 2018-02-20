@@ -9,6 +9,8 @@ namespace Szkolimy_za_darmo_api.Controllers.Resources
         public int Id;
         public string Description {get; set;}
         public DateTime LastUpdate {get; set;}
+        public DateTime RegisterSince {get; set;}
+        public DateTime RegisterTo {get; set;}
         public ICollection<TrainingTypeResource> types {get; set;}
 
         public TrainingResource() {

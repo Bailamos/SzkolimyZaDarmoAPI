@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -35,6 +36,22 @@ namespace Szkolimy_za_darmo_api.Controllers
 
             Training trainingToMap = await trainingRepository.GetOne(training.Id);
             var response = mapper.Map<Training, TrainingResource>(trainingToMap);
+            return Ok(response);
+        }
+
+        [HttpGet] 
+        public async Task<IActionResult> getTrainings()
+        {   
+            IEnumerable<Training> queryResult = await trainingRepository.GetAll();
+            var response = mapper.Map<IEnumerable<Training>, IEnumerable<TrainingResource>>(queryResult);
+            return Ok(response);
+        }
+
+        [HttpGet("{id}")] 
+        public async Task<IActionResult> getTraining(int id)
+        {   
+            Training queryResult = await trainingRepository.GetOne(id);
+            var response = mapper.Map<Training, TrainingResource>(queryResult);
             return Ok(response);
         }
     }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Szkolimy_za_darmo_api.Core.Models;
 
@@ -10,5 +11,7 @@ namespace Szkolimy_za_darmo_api.Core.Interfaces
         void Add(Training training);
 
         void Remove(Training training);
+
+        Task<IEnumerable<Training>> GetAll();
     }
 }
