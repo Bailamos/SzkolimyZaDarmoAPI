@@ -1,8 +1,10 @@
 using System.Linq;
 using AutoMapper;
 using Szkolimy_za_darmo_api.Controllers.Resources;
+using Szkolimy_za_darmo_api.Controllers.Resources.Query;
 using Szkolimy_za_darmo_api.Controllers.Resources.Save;
 using Szkolimy_za_darmo_api.Core.Models;
+using Szkolimy_za_darmo_api.Core.Models.Query;
 
 namespace Szkolimy_za_darmo_api.Mapping
 {
@@ -29,6 +31,8 @@ namespace Szkolimy_za_darmo_api.Mapping
                 .ForMember(
                     training => training.Types,
                     opt => opt.MapFrom(trainingResource => trainingResource.Types.Select(Type => new TrainingType{TypeName = Type})));
+
+            CreateMap<TrainingQueryResource, TrainingQuery>();
           }
     }
 }

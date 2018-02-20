@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Szkolimy_za_darmo_api.Core.Models;
+using Szkolimy_za_darmo_api.Core.Models.Query;
 
 namespace Szkolimy_za_darmo_api.Core.Interfaces
 {
@@ -12,6 +13,6 @@ namespace Szkolimy_za_darmo_api.Core.Interfaces
 
         void Remove(Training training);
 
-        Task<IEnumerable<Training>> GetAll();
+        Task<IEnumerable<Training>> GetAll(TrainingQuery trainingQuery);
     }
 }

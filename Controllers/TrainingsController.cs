@@ -4,9 +4,11 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Szkolimy_za_darmo_api.Controllers.Resources;
+using Szkolimy_za_darmo_api.Controllers.Resources.Query;
 using Szkolimy_za_darmo_api.Controllers.Resources.Save;
 using Szkolimy_za_darmo_api.Core.Interfaces;
 using Szkolimy_za_darmo_api.Core.Models;
+using Szkolimy_za_darmo_api.Core.Models.Query;
 
 namespace Szkolimy_za_darmo_api.Controllers
 {
@@ -40,9 +42,12 @@ namespace Szkolimy_za_darmo_api.Controllers
         }
 
         [HttpGet] 
-        public async Task<IActionResult> getTrainings()
+        public async Task<IActionResult> getTrainings(TrainingQueryResource queryResource)
         {   
-            IEnumerable<Training> queryResult = await trainingRepository.GetAll();
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            TrainingQuery trainingQuery = mapper.Map<TrainingQueryResource, TrainingQuery>(queryResource);
+            IEnumerable<Training> queryResult = await trainingRepository.GetAll(trainingQuery);
             var response = mapper.Map<IEnumerable<Training>, IEnumerable<TrainingResource>>(queryResult);
             return Ok(response);
         }
