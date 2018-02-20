@@ -15,6 +15,7 @@ namespace Szkolimy_za_darmo_api.Controllers
     [Route("/api/trainings")]
     public class TrainingsController : Controller
     {
+        private const string ERROR_BAD_DATES = "Termin zakończenia nie może być mniejszy od terminu początku";
         private readonly IUnitOfWork unitOfWork;
         private readonly ITrainingRepository trainingRepository;
         private readonly IMapper mapper;
@@ -30,7 +31,9 @@ namespace Szkolimy_za_darmo_api.Controllers
         public async Task<IActionResult> createTraining([FromBody] SaveTrainingResource trainingResource)
         {   
             if (!ModelState.IsValid) return BadRequest(ModelState);
-
+            if (trainingResource.RegisterTo < trainingResource.RegisterSince) 
+                return BadRequest(ERROR_BAD_DATES);
+                
             Training training = mapper.Map<SaveTrainingResource,Training>(trainingResource);
             training.LastUpdate = DateTime.Now;
             trainingRepository.Add(training);
