@@ -15,7 +15,7 @@ namespace Szkolimy_za_darmo_api.Persistance
     {
         private readonly Dictionary<string, Expression<Func<Training, object>>> COLUMNS_MAP = new Dictionary<string, Expression<Func<Training, object>>>()
         {
-            ["lastUpdate"] = v => v.LastUpdate
+            ["LastUpdate"] = v => v.LastUpdate
         };
 
         private readonly SzdDbContext context;
