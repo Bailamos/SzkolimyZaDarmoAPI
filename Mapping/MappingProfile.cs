@@ -10,17 +10,20 @@ namespace Szkolimy_za_darmo_api.Mapping
 {
     public class MappingProfile : Profile
     {
+          //TODO: Refactor
           public MappingProfile() {
+            //Domain to resource
             CreateMap<Type, TypeResource>();
-
             CreateMap<Training, TrainingResource>()
                 .ForMember(
-                    trainingResource => trainingResource.types, 
+                    trainingResource => trainingResource.Types, 
                     opt => opt.MapFrom(v => v.Types.Select(
                         vf => new TrainingTypeResource {TypeName = vf.TypeName})))
                 .ForMember(trainingResource => trainingResource.Id, opt => opt.MapFrom(training => training.Id))
                 .ForMember(trainingResource => trainingResource.LastUpdate, opt => opt.MapFrom(training => training.LastUpdate));
 
+            //Resource to Domain
+            CreateMap<TypeResource, Type>();
             CreateMap<SaveTrainingResource,Training>()
                 .ForMember(training => training.Id, opt => opt.Ignore())
                 .ForMember(training => training.LastUpdate, opt => opt.Ignore())

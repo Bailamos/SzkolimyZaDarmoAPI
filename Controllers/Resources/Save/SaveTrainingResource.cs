@@ -10,6 +10,7 @@ namespace Szkolimy_za_darmo_api.Controllers.Resources.Save
         public DateTime RegisterSince {get; set;}
         public DateTime RegisterTo {get; set;}
         public ICollection<string> Types {get; set;}
+        public string MainTypeName {get; set;}
 
         public SaveTrainingResource() {
             this.Types = new Collection<string>();

@@ -34,6 +34,7 @@ namespace Szkolimy_za_darmo_api.Persistance
         {
             var query = context.Trainings
                 .Include(training => training.Types)
+                .Include(training => training.MainType)
                 .AsQueryable();
 
             query = query.ApplyOrdering(queryObj, COLUMNS_MAP);
@@ -47,6 +48,7 @@ namespace Szkolimy_za_darmo_api.Persistance
         {
             return await context.Trainings
                 .Include(training => training.Types)
+                .Include(training => training.MainType)
                 .SingleOrDefaultAsync(training => training.Id == id);
         }
 
