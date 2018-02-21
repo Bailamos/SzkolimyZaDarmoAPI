@@ -35,7 +35,9 @@ namespace Szkolimy_za_darmo_api.Controllers
                 return BadRequest(ERROR_BAD_DATES);
                 
             Training training = mapper.Map<SaveTrainingResource,Training>(trainingResource);
-            training.LastUpdate = DateTime.Now;
+            DateTime now =  DateTime.Now;
+            training.InsertDate = now;
+            training.LastUpdate = now;
             trainingRepository.Add(training);
             await unitOfWork.CompleteAsync();
 
