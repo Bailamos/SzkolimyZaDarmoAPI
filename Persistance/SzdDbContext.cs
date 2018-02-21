@@ -7,7 +7,7 @@ namespace Szkolimy_za_darmo_api.Persistance
     {
         public DbSet<MarketStatus> MarketStatuses {get; set;}
         public DbSet<Training> Trainings {get; set;}
-
+        public DbSet<Localization> localizations {get; set;}
         public DbSet<Type> Types {get; set;}
 
         public SzdDbContext(DbContextOptions<SzdDbContext> options) : base(options) {   

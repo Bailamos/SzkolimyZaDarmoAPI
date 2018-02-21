@@ -14,6 +14,7 @@ namespace Szkolimy_za_darmo_api.Controllers.Resources.Save
         public ICollection<string> Types {get; set;}
         public string MainTypeName {get; set;}
         public int MarketStatusId{get; set;}
+        public int LocalizationId{get; set;}
         public SaveTrainingResource() {
             this.Types = new Collection<string>();
         }

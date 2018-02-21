@@ -23,6 +23,8 @@ namespace Szkolimy_za_darmo_api.Core.Models
         public Type MainType {get; set;}
         public int MarketStatusId{get; set;}
         public MarketStatus MarketStatus {get; set;}
+        public int LocalizationId {get; set;}
+        public Localization Localization {get; set;}
 
         public Training() {
             this.Types = new Collection<TrainingType>();

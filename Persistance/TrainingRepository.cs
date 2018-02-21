@@ -37,6 +37,7 @@ namespace Szkolimy_za_darmo_api.Persistance
                 .Include(training => training.Types)
                 .Include(training => training.MainType)
                 .Include(training => training.MarketStatus)
+                .Include(training => training.Localization)
                 .AsQueryable();
 
             query = query.ApplyOrdering(queryObj, COLUMNS_MAP);
@@ -52,6 +53,7 @@ namespace Szkolimy_za_darmo_api.Persistance
                 .Include(training => training.Types)
                 .Include(training => training.MainType)
                 .Include(training => training.MarketStatus)
+                .Include(training => training.Localization)
                 .SingleOrDefaultAsync(training => training.Id == id);
         }
 

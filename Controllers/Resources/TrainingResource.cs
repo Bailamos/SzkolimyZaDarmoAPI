@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 
 namespace Szkolimy_za_darmo_api.Controllers.Resources
 {
-    public class TrainingResource
+    public partial class TrainingResource
     {
         public int Id;
         public string Title {get; set;}
@@ -15,7 +15,8 @@ namespace Szkolimy_za_darmo_api.Controllers.Resources
         public DateTime RegisterTo {get; set;}
         public ICollection<TypeResource> Types {get; set;}
         public TypeResource MainType {get; set;}
-        public MarketStatusResource MarketStatus{get; set;}
+        public MarketStatusResource MarketStatus {get; set;}
+        public LocalizationResource Localization {get; set;}
         public TrainingResource() {
             Types = new Collection<TypeResource>();
         }
