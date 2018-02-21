@@ -10,9 +10,10 @@ using Szkolimy_za_darmo_api.Persistance;
 namespace Szkolimyzadarmoapi.Migrations
 {
     [DbContext(typeof(SzdDbContext))]
-    partial class SzdDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180221104839_Max lenght for training.description and title")]
+    partial class Maxlenghtfortrainingdescriptionandtitle
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,8 +40,7 @@ namespace Szkolimyzadarmoapi.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Description")
-                        .HasMaxLength(2000);
+                    b.Property<string>("Description");
 
                     b.Property<DateTime>("LastUpdate");
 
@@ -53,13 +53,11 @@ namespace Szkolimyzadarmoapi.Migrations
                     b.Property<DateTime>("RegisterTo");
 
                     b.Property<string>("Title")
-                        .HasMaxLength(255);
+                        .HasMaxLength(2000);
 
                     b.HasKey("Id");
 
                     b.HasIndex("MainTypeName");
-
-                    b.HasIndex("MarketStatusId");
 
                     b.ToTable("trainings");
                 });
@@ -92,11 +90,6 @@ namespace Szkolimyzadarmoapi.Migrations
                     b.HasOne("Szkolimy_za_darmo_api.Core.Models.Type", "MainType")
                         .WithMany()
                         .HasForeignKey("MainTypeName");
-
-                    b.HasOne("Szkolimy_za_darmo_api.Core.Models.MarketStatus", "MarketStatus")
-                        .WithMany()
-                        .HasForeignKey("MarketStatusId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Szkolimy_za_darmo_api.Core.Models.TrainingType", b =>

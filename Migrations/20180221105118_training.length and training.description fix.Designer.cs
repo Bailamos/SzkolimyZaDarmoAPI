@@ -10,9 +10,10 @@ using Szkolimy_za_darmo_api.Persistance;
 namespace Szkolimyzadarmoapi.Migrations
 {
     [DbContext(typeof(SzdDbContext))]
-    partial class SzdDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180221105118_training.length and training.description fix")]
+    partial class traininglengthandtrainingdescriptionfix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -59,8 +60,6 @@ namespace Szkolimyzadarmoapi.Migrations
 
                     b.HasIndex("MainTypeName");
 
-                    b.HasIndex("MarketStatusId");
-
                     b.ToTable("trainings");
                 });
 
@@ -92,11 +91,6 @@ namespace Szkolimyzadarmoapi.Migrations
                     b.HasOne("Szkolimy_za_darmo_api.Core.Models.Type", "MainType")
                         .WithMany()
                         .HasForeignKey("MainTypeName");
-
-                    b.HasOne("Szkolimy_za_darmo_api.Core.Models.MarketStatus", "MarketStatus")
-                        .WithMany()
-                        .HasForeignKey("MarketStatusId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Szkolimy_za_darmo_api.Core.Models.TrainingType", b =>

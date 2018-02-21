@@ -16,11 +16,13 @@ namespace Szkolimy_za_darmo_api.Mapping
             CreateMap<Type, TypeResource>();
             CreateMap<Training, TrainingResource>()
                 .ForMember(
-                    trainingResource => trainingResource.Types, 
-                    opt => opt.MapFrom(v => v.Types.Select(
-                        vf => new TrainingTypeResource {TypeName = vf.TypeName})))
-                .ForMember(trainingResource => trainingResource.Id, opt => opt.MapFrom(training => training.Id))
-                .ForMember(trainingResource => trainingResource.LastUpdate, opt => opt.MapFrom(training => training.LastUpdate));
+                    trainingResource => trainingResource.MarketStatus,
+                    opt => opt.MapFrom(
+                        training => new MarketStatusResource{Id = training.MarketStatus.Id, Status = training.MarketStatus.Status}))
+                .ForMember(
+                    trainingResource => trainingResource.Types,
+                    opt => opt.MapFrom(
+                        training => training.Types.Select(Type => new TrainingTypeResource{Name = Type.TypeName})));
 
             //Resource to Domain
             CreateMap<TypeResource, Type>();

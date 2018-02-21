@@ -33,7 +33,7 @@ namespace Szkolimy_za_darmo_api
             services.AddScoped<ITrainingRepository, TrainingRepository>();
 
             services.AddAutoMapper();
-
+            services.AddCors();
             services.AddMvc();
         }
 
@@ -44,7 +44,7 @@ namespace Szkolimy_za_darmo_api
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseCors(builder => builder.WithOrigins("http://localhost:4200").AllowAnyHeader());
             app.UseMvc();
         }
     }

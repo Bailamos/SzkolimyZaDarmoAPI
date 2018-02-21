@@ -10,9 +10,10 @@ using Szkolimy_za_darmo_api.Persistance;
 namespace Szkolimyzadarmoapi.Migrations
 {
     [DbContext(typeof(SzdDbContext))]
-    partial class SzdDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180221113313_market status fk in trainings")]
+    partial class marketstatusfkintrainings
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

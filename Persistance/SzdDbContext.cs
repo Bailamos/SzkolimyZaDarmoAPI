@@ -5,6 +5,7 @@ namespace Szkolimy_za_darmo_api.Persistance
 {
     public class SzdDbContext : DbContext
     {
+        public DbSet<MarketStatus> MarketStatuses {get; set;}
         public DbSet<Training> Trainings {get; set;}
 
         public DbSet<Type> Types {get; set;}
@@ -17,6 +18,7 @@ namespace Szkolimy_za_darmo_api.Persistance
                     TrainingType.TrainingId,
                     TrainingType.TypeName
                 });
+            modelBuilder.Entity<MarketStatus>().HasIndex(MarketStatus => MarketStatus.Status).IsUnique();
         }
     }
 }
