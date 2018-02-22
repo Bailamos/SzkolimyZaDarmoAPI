@@ -10,23 +10,14 @@ using Szkolimy_za_darmo_api.Persistance;
 namespace Szkolimyzadarmoapi.Migrations
 {
     [DbContext(typeof(SzdDbContext))]
-    partial class SzdDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180221221745_populate type subtypes")]
+    partial class populatetypesubtypes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.0.1-rtm-125");
-
-            modelBuilder.Entity("Szkolimy_za_darmo_api.Core.Models.Category", b =>
-                {
-                    b.Property<string>("Name")
-                        .HasMaxLength(255);
-
-                    b.HasKey("Name");
-
-                    b.ToTable("categories");
-                });
 
             modelBuilder.Entity("Szkolimy_za_darmo_api.Core.Models.Localization", b =>
                 {
@@ -54,16 +45,6 @@ namespace Szkolimyzadarmoapi.Migrations
                         .IsUnique();
 
                     b.ToTable("marketStatuses");
-                });
-
-            modelBuilder.Entity("Szkolimy_za_darmo_api.Core.Models.Tag", b =>
-                {
-                    b.Property<string>("Name")
-                        .HasMaxLength(255);
-
-                    b.HasKey("Name");
-
-                    b.ToTable("Tags");
                 });
 
             modelBuilder.Entity("Szkolimy_za_darmo_api.Core.Models.Training", b =>
@@ -102,17 +83,27 @@ namespace Szkolimyzadarmoapi.Migrations
                     b.ToTable("trainings");
                 });
 
-            modelBuilder.Entity("Szkolimy_za_darmo_api.Core.Models.TrainingTag", b =>
+            modelBuilder.Entity("Szkolimy_za_darmo_api.Core.Models.TrainingType", b =>
                 {
                     b.Property<int>("TrainingId");
 
-                    b.Property<string>("TagName");
+                    b.Property<string>("TypeName");
 
-                    b.HasKey("TrainingId", "TagName");
+                    b.HasKey("TrainingId", "TypeName");
 
-                    b.HasIndex("TagName");
+                    b.HasIndex("TypeName");
 
-                    b.ToTable("training_tag");
+                    b.ToTable("training_types");
+                });
+
+            modelBuilder.Entity("Szkolimy_za_darmo_api.Core.Models.Type", b =>
+                {
+                    b.Property<string>("Name")
+                        .HasMaxLength(255);
+
+                    b.HasKey("Name");
+
+                    b.ToTable("types");
                 });
 
             modelBuilder.Entity("Szkolimy_za_darmo_api.Core.Models.Training", b =>
@@ -122,7 +113,7 @@ namespace Szkolimyzadarmoapi.Migrations
                         .HasForeignKey("LocalizationId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Szkolimy_za_darmo_api.Core.Models.Category", "MainType")
+                    b.HasOne("Szkolimy_za_darmo_api.Core.Models.Type", "MainType")
                         .WithMany()
                         .HasForeignKey("MainTypeName");
 
@@ -132,16 +123,16 @@ namespace Szkolimyzadarmoapi.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Szkolimy_za_darmo_api.Core.Models.TrainingTag", b =>
+            modelBuilder.Entity("Szkolimy_za_darmo_api.Core.Models.TrainingType", b =>
                 {
-                    b.HasOne("Szkolimy_za_darmo_api.Core.Models.Tag", "Tag")
-                        .WithMany()
-                        .HasForeignKey("TagName")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("Szkolimy_za_darmo_api.Core.Models.Training", "Training")
                         .WithMany("Types")
                         .HasForeignKey("TrainingId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Szkolimy_za_darmo_api.Core.Models.Type", "Type")
+                        .WithMany()
+                        .HasForeignKey("TypeName")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

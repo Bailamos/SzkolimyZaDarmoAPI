@@ -16,7 +16,7 @@ namespace Szkolimy_za_darmo_api.Persistance
         private readonly Dictionary<string, Expression<Func<Training, object>>> COLUMNS_MAP = new Dictionary<string, Expression<Func<Training, object>>>()
         {
             ["LastUpdate"] = v => v.LastUpdate,
-            ["MainType"] = v => v.MainTypeName
+            // ["MainType"] = v => v.MainTypeName
         };
 
         private readonly SzdDbContext context;
@@ -35,7 +35,6 @@ namespace Szkolimy_za_darmo_api.Persistance
         {
             var query = context.Trainings
                 .Include(training => training.Types)
-                .Include(training => training.MainType)
                 .Include(training => training.MarketStatus)
                 .Include(training => training.Localization)
                 .AsQueryable();
@@ -51,7 +50,6 @@ namespace Szkolimy_za_darmo_api.Persistance
         {
             return await context.Trainings
                 .Include(training => training.Types)
-                .Include(training => training.MainType)
                 .Include(training => training.MarketStatus)
                 .Include(training => training.Localization)
                 .SingleOrDefaultAsync(training => training.Id == id);

@@ -18,16 +18,16 @@ namespace Szkolimy_za_darmo_api.Core.Models
         public DateTime InsertDate {get; set;}
         public DateTime RegisterSince {get; set;}
         public DateTime RegisterTo {get; set;}
-        public ICollection<TrainingType> Types {get; set;}
+        public ICollection<TrainingTag> Types {get; set;}
         public string MainTypeName { get; set; }  
-        public Type MainType {get; set;}
+        public Category MainType {get; set;}
         public int MarketStatusId{get; set;}
         public MarketStatus MarketStatus {get; set;}
         public int LocalizationId {get; set;}
         public Localization Localization {get; set;}
 
         public Training() {
-            this.Types = new Collection<TrainingType>();
+            this.Types = new Collection<TrainingTag>();
         }
     }
 }

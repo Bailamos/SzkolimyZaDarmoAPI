@@ -7,16 +7,17 @@ namespace Szkolimy_za_darmo_api.Persistance
     {
         public DbSet<MarketStatus> MarketStatuses {get; set;}
         public DbSet<Training> Trainings {get; set;}
-        public DbSet<Localization> localizations {get; set;}
-        public DbSet<Type> Types {get; set;}
+        public DbSet<Localization> Localizations {get; set;}
+        public DbSet<Tag> Tags {get; set;}
+        public DbSet<Category> Categories {get; set;}
 
         public SzdDbContext(DbContextOptions<SzdDbContext> options) : base(options) {   
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
-            modelBuilder.Entity<TrainingType>().HasKey(TrainingType => new {
+            modelBuilder.Entity<TrainingTag>().HasKey(TrainingType => new {
                     TrainingType.TrainingId,
-                    TrainingType.TypeName
+                    TrainingType.TagName
                 });
             modelBuilder.Entity<MarketStatus>().HasIndex(MarketStatus => MarketStatus.Status).IsUnique();
         }
