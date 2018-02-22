@@ -11,12 +11,12 @@ namespace Szkolimy_za_darmo_api.Controllers.Resources.Save
         public string Description {get; set;}
         public Nullable<DateTime> RegisterSince {get; set;}
         public Nullable<DateTime> RegisterTo {get; set;}
-        public ICollection<string> Types {get; set;}
-        public string MainTypeName {get; set;}
+        public ICollection<string> Tags {get; set;}
+        public string CategoryName {get; set;}
         public int MarketStatusId{get; set;}
         public int LocalizationId{get; set;}
         public SaveTrainingResource() {
-            this.Types = new Collection<string>();
+            this.Tags = new Collection<string>();
         }
     }
 }

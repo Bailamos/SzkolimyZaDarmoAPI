@@ -18,24 +18,20 @@ namespace Szkolimy_za_darmo_api.Mapping
                 .ForMember(
                     trainingResource => trainingResource.MarketStatus,
                     opt => opt.MapFrom(
-                        training => new MarketStatusResource{Id = training.MarketStatus.Id, Status = training.MarketStatus.Status}));
-                // .ForMember(
-                //     trainingResource => trainingResource.Types,
-                //     opt => opt.MapFrom(
-                //         training => training.Types.Select(Type => new TrainingTypeResource{Name = Type.TypeName})));
+                        training => new MarketStatusResource{Id = training.MarketStatus.Id, Status = training.MarketStatus.Status}))
+                .ForMember(
+                    trainingResource => trainingResource.Tags,
+                    opt => opt.MapFrom(
+                        training => training.Tags.Select(Type => new TagResource{Name = Type.TagName})));
 
             //Resource to Domain
-            // CreateMap<TypeResource, Type>();
+            CreateMap<TagResource, Tag>();
             CreateMap<SaveTrainingResource,Training>()
                 .ForMember(training => training.Id, opt => opt.Ignore())
                 .ForMember(training => training.LastUpdate, opt => opt.Ignore())
                 .ForMember(
-                    training => training.Description,
-                    opt => opt.MapFrom(
-                        trainingResource => trainingResource.Description));
-                // .ForMember(
-                //     training => training.Types,
-                //     opt => opt.MapFrom(trainingResource => trainingResource.Types.Select(Type => new TrainingType{TypeName = Type})));
+                    training => training.Tags,
+                    opt => opt.MapFrom(trainingResource => trainingResource.Tags.Select(Type => new TrainingTag{TagName = Type})));
 
             CreateMap<TrainingQueryResource, TrainingQuery>();
           }

@@ -71,7 +71,11 @@ namespace Szkolimyzadarmoapi.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("CategoryName")
+                        .IsRequired();
+
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasMaxLength(2000);
 
                     b.Property<DateTime>("InsertDate");
@@ -80,8 +84,6 @@ namespace Szkolimyzadarmoapi.Migrations
 
                     b.Property<int>("LocalizationId");
 
-                    b.Property<string>("MainTypeName");
-
                     b.Property<int>("MarketStatusId");
 
                     b.Property<DateTime>("RegisterSince");
@@ -89,13 +91,14 @@ namespace Szkolimyzadarmoapi.Migrations
                     b.Property<DateTime>("RegisterTo");
 
                     b.Property<string>("Title")
+                        .IsRequired()
                         .HasMaxLength(255);
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LocalizationId");
+                    b.HasIndex("CategoryName");
 
-                    b.HasIndex("MainTypeName");
+                    b.HasIndex("LocalizationId");
 
                     b.HasIndex("MarketStatusId");
 
@@ -112,19 +115,20 @@ namespace Szkolimyzadarmoapi.Migrations
 
                     b.HasIndex("TagName");
 
-                    b.ToTable("training_tag");
+                    b.ToTable("training_tags");
                 });
 
             modelBuilder.Entity("Szkolimy_za_darmo_api.Core.Models.Training", b =>
                 {
+                    b.HasOne("Szkolimy_za_darmo_api.Core.Models.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryName")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("Szkolimy_za_darmo_api.Core.Models.Localization", "Localization")
                         .WithMany()
                         .HasForeignKey("LocalizationId")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Szkolimy_za_darmo_api.Core.Models.Category", "MainType")
-                        .WithMany()
-                        .HasForeignKey("MainTypeName");
 
                     b.HasOne("Szkolimy_za_darmo_api.Core.Models.MarketStatus", "MarketStatus")
                         .WithMany()
@@ -140,7 +144,7 @@ namespace Szkolimyzadarmoapi.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Szkolimy_za_darmo_api.Core.Models.Training", "Training")
-                        .WithMany("Types")
+                        .WithMany("Tags")
                         .HasForeignKey("TrainingId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

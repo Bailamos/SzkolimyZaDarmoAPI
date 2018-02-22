@@ -34,8 +34,9 @@ namespace Szkolimy_za_darmo_api.Persistance
         public async Task<IEnumerable<Training>> GetAll(TrainingQuery queryObj)
         {
             var query = context.Trainings
-                .Include(training => training.Types)
                 .Include(training => training.MarketStatus)
+                .Include(training => training.Category)
+                .Include(training => training.Tags)
                 .Include(training => training.Localization)
                 .AsQueryable();
 
@@ -49,7 +50,6 @@ namespace Szkolimy_za_darmo_api.Persistance
         public async Task<Training> GetOne(int id, bool includeRelated = true)
         {
             return await context.Trainings
-                .Include(training => training.Types)
                 .Include(training => training.MarketStatus)
                 .Include(training => training.Localization)
                 .SingleOrDefaultAsync(training => training.Id == id);
