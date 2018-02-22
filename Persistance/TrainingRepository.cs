@@ -51,6 +51,8 @@ namespace Szkolimy_za_darmo_api.Persistance
         {
             return await context.Trainings
                 .Include(training => training.MarketStatus)
+                .Include(training => training.Category)
+                .Include(training => training.Tags)
                 .Include(training => training.Localization)
                 .SingleOrDefaultAsync(training => training.Id == id);
         }
