@@ -27,6 +27,8 @@ namespace Szkolimy_za_darmo_api.Core.Models
         public MarketStatus MarketStatus {get; set;}
         public int LocalizationId {get; set;}
         public Localization Localization {get; set;}
+        public int InstructorId {get; set;}
+        public Instructor Instructor {get; set;}
         public ICollection<Entry> Entries {get; set;}
         public ICollection<TrainingTag> Tags {get; set;}
 
