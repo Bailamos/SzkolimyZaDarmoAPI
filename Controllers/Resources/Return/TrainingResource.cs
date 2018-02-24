@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace Szkolimy_za_darmo_api.Controllers.Resources
+namespace Szkolimy_za_darmo_api.Controllers.Resources.Return
 {
     public partial class TrainingResource
     {

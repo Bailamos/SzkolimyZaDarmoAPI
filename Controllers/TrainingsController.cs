@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Szkolimy_za_darmo_api.Controllers.Resources;
+using Szkolimy_za_darmo_api.Controllers.Resources.Return;
 using Szkolimy_za_darmo_api.Controllers.Resources.Query;
 using Szkolimy_za_darmo_api.Controllers.Resources.Save;
 using Szkolimy_za_darmo_api.Core.Interfaces;

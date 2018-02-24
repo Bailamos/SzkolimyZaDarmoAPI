@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using AutoMapper;
-using Szkolimy_za_darmo_api.Controllers.Resources;
+using Szkolimy_za_darmo_api.Controllers.Resources.Return;
 using Szkolimy_za_darmo_api.Controllers.Resources.Query;
 using Szkolimy_za_darmo_api.Controllers.Resources.Save;
 using Szkolimy_za_darmo_api.Core.Models;
@@ -11,7 +11,6 @@ namespace Szkolimy_za_darmo_api.Mapping
 {
     public class MappingProfile : Profile
     {
-          //TODO: Refactor
           public MappingProfile() {
             DomainToResource();
             ResourceToDomain();
@@ -36,16 +35,19 @@ namespace Szkolimy_za_darmo_api.Mapping
 
         private void ResourceToDomain() {
             CreateMap<TagResource, Tag>();
-            CreateMap<SaveTrainingResource,Training>()
+            CreateMap<SaveTrainingResource, Training>()
                 .ForMember(training => training.Id, opt => opt.Ignore())
                 .ForMember(training => training.LastUpdate, opt => opt.Ignore())
                 .ForMember(
                     training => training.Tags,
                     opt => opt.MapFrom(trainingResource => trainingResource.Tags.Select(Type => new TrainingTag{TagName = Type})));
-            CreateMap<SaveUserResource,User>()
+            CreateMap<SaveUserResource, User>()
                 .ForMember(user => user.Entries, opt => opt.Ignore());
-            CreateMap<SaveEntryResource,Entry>()
+            CreateMap<SaveEntryResource, Entry>()
                 .ForMember(entry => entry.TrainingId, opt => opt.MapFrom(saveEntryResource => saveEntryResource.TrainingId));
+            CreateMap<SaveInstructorResource,Instructor>()
+                .ForMember(instructor => instructor.Id, opt => opt.Ignore())
+                .ForMember(instructor => instructor.Trainings, opt => opt.Ignore());
           }
     }
 }

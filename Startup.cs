@@ -32,6 +32,7 @@ namespace Szkolimy_za_darmo_api
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<ITrainingRepository, TrainingRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IInstructorRepository, InstructorRepository>();
 
             services.AddAutoMapper();
             services.AddCors();
