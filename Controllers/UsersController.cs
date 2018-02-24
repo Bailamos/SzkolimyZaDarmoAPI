@@ -33,6 +33,7 @@ namespace Szkolimy_za_darmo_api.Controllers
             if(await userRepository.CheckIfUserExists(userResource.PhoneNumber)){
                 user = await userRepository.GetOne(userResource.PhoneNumber);
                 mapper.Map<SaveUserResource, User>(userResource, user);
+                await unitOfWork.CompleteAsync();
             } else {
                 user = mapper.Map<SaveUserResource, User>(userResource);
                 userRepository.Add(user);
