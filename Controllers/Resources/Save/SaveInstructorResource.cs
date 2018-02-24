@@ -6,7 +6,9 @@ namespace Szkolimy_za_darmo_api.Controllers.Resources.Save
     {
         [RegularExpression("^(\\d{7}|\\d{9})$")]
         public string PhoneNumber {get; set;}
+        [Required]
         public string Name {get; set;}
+        [Required]
         public string Surname {get; set;}
 
         [RegularExpression(
