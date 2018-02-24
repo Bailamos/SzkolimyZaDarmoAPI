@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using AutoMapper;
 using Szkolimy_za_darmo_api.Controllers.Resources;
@@ -12,8 +13,14 @@ namespace Szkolimy_za_darmo_api.Mapping
     {
           //TODO: Refactor
           public MappingProfile() {
-            //Domain to resource
-            // CreateMap<Type, TypeResource>();
+            DomainToResource();
+            ResourceToDomain();
+
+            CreateMap<TrainingQueryResource, TrainingQuery>();
+          }
+
+        private void DomainToResource()
+        {
             CreateMap<Training, TrainingResource>()
                 .ForMember(
                     trainingResource => trainingResource.MarketStatus,
@@ -23,8 +30,11 @@ namespace Szkolimy_za_darmo_api.Mapping
                     trainingResource => trainingResource.Tags,
                     opt => opt.MapFrom(
                         training => training.Tags.Select(Type => new TagResource{Name = Type.TagName})));
+            CreateMap<User, SaveUserResource>()
+                .ForMember(saveEntryResource => saveEntryResource.Entry, opt => opt.Ignore());
+        }
 
-            //Resource to Domain
+        private void ResourceToDomain() {
             CreateMap<TagResource, Tag>();
             CreateMap<SaveTrainingResource,Training>()
                 .ForMember(training => training.Id, opt => opt.Ignore())
@@ -32,8 +42,10 @@ namespace Szkolimy_za_darmo_api.Mapping
                 .ForMember(
                     training => training.Tags,
                     opt => opt.MapFrom(trainingResource => trainingResource.Tags.Select(Type => new TrainingTag{TagName = Type})));
-
-            CreateMap<TrainingQueryResource, TrainingQuery>();
+            CreateMap<SaveUserResource,User>()
+                .ForMember(user => user.Entries, opt => opt.Ignore());
+            CreateMap<SaveEntryResource,Entry>()
+                .ForMember(entry => entry.TrainingId, opt => opt.MapFrom(saveEntryResource => saveEntryResource.TrainingId));
           }
     }
 }

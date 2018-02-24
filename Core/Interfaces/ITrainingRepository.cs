@@ -14,5 +14,6 @@ namespace Szkolimy_za_darmo_api.Core.Interfaces
         void Remove(Training training);
 
         Task<IEnumerable<Training>> GetAll(TrainingQuery trainingQuery);
+
     }
 }

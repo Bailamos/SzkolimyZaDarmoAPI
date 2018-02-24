@@ -13,10 +13,10 @@ namespace Szkolimy_za_darmo_api.Persistance
 {
     public class TrainingRepository : ITrainingRepository
     {
-        private readonly Dictionary<string, Expression<Func<Training, object>>> COLUMNS_MAP = new Dictionary<string, Expression<Func<Training, object>>>()
+        private readonly Dictionary<string, Expression<Func<Training, object>>> COLUMNS_MAP 
+            = new Dictionary<string, Expression<Func<Training, object>>>()
         {
             ["LastUpdate"] = v => v.LastUpdate,
-            // ["MainType"] = v => v.MainTypeName
         };
 
         private readonly SzdDbContext context;
@@ -40,6 +40,9 @@ namespace Szkolimy_za_darmo_api.Persistance
                 .Include(training => training.Localization)
                 .AsQueryable();
 
+            // if (queryObj.Category.HasValue)
+            //     query = query.Where(v => v.Category.Id == queryObj.Category.Value);
+
             query = query.ApplyOrdering(queryObj, COLUMNS_MAP);
             query = query.ApplyPaging(queryObj);
 
@@ -49,12 +52,16 @@ namespace Szkolimy_za_darmo_api.Persistance
 
         public async Task<Training> GetOne(int id, bool includeRelated = true)
         {
-            return await context.Trainings
-                .Include(training => training.MarketStatus)
-                .Include(training => training.Category)
-                .Include(training => training.Tags)
-                .Include(training => training.Localization)
-                .SingleOrDefaultAsync(training => training.Id == id);
+            if(includeRelated)
+                return await context.Trainings
+                    .Include(training => training.MarketStatus)
+                    .Include(training => training.Category)
+                    .Include(training => training.Tags)
+                    .Include(training => training.Localization)
+                    .SingleOrDefaultAsync(training => training.Id == id);
+            else
+                return await context.Trainings
+                    .SingleOrDefaultAsync(training => training.Id == id);
         }
 
         public void Remove(Training training)

@@ -10,6 +10,8 @@ namespace Szkolimy_za_darmo_api.Persistance
         public DbSet<Localization> Localizations {get; set;}
         public DbSet<Tag> Tags {get; set;}
         public DbSet<Category> Categories {get; set;}
+        public DbSet<User> Users {get; set;}
+        public DbSet<Entry> Entries {get; set;}
 
         public SzdDbContext(DbContextOptions<SzdDbContext> options) : base(options) {   
         }
@@ -18,6 +20,10 @@ namespace Szkolimy_za_darmo_api.Persistance
             modelBuilder.Entity<TrainingTag>().HasKey(TrainingType => new {
                     TrainingType.TrainingId,
                     TrainingType.TagName
+                });
+            modelBuilder.Entity<Entry>().HasKey(Entry => new {
+                    Entry.TrainingId,
+                    Entry.UserPhoneNumber
                 });
             modelBuilder.Entity<MarketStatus>().HasIndex(MarketStatus => MarketStatus.Status).IsUnique();
         }
