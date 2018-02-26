@@ -15,5 +15,9 @@ namespace Szkolimy_za_darmo_api.Core.Interfaces
 
         Task<IEnumerable<Training>> GetAll(TrainingQuery trainingQuery);
 
+        Task<IEnumerable<Category>> GetAllCategories();
+        
+        Task<IEnumerable<Localization>> GetAllLocalizations();
+
     }
 }

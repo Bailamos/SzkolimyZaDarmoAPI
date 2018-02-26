@@ -40,14 +40,15 @@ namespace Szkolimy_za_darmo_api.Persistance
                 .Include(training => training.Localization)
                 .AsQueryable();
 
-            // if (queryObj.Category.HasValue)
-            //     query = query.Where(v => v.Category.Id == queryObj.Category.Value);
+            if (queryObj.Categories.Length > 0)
+                 query = query.Where(v => queryObj.Categories.Contains(v.Category.Name));
+            if (queryObj.Localizations.Length > 0)
+                 query = query.Where(v => queryObj.Localizations.Contains(v.Localization.Id));
 
             query = query.ApplyOrdering(queryObj, COLUMNS_MAP);
             query = query.ApplyPaging(queryObj);
 
-            var result = await query.ToListAsync();
-            return result;
+            return await query.ToListAsync();
         }
 
         public async Task<Training> GetOne(int id, bool includeRelated = true)
@@ -68,5 +69,17 @@ namespace Szkolimy_za_darmo_api.Persistance
         {
             throw new System.NotImplementedException();
         }
+
+        
+        public async Task<IEnumerable<Category>> GetAllCategories()
+        {
+            return await context.Categories.ToListAsync();
+        }
+
+        public async Task<IEnumerable<Localization>> GetAllLocalizations()
+        {
+            return await context.Localizations.ToListAsync();
+        }
+
     }
 }

@@ -46,6 +46,7 @@ namespace Szkolimy_za_darmo_api.Controllers
         [HttpGet] 
         public async Task<IActionResult> getTrainings(TrainingQueryResource queryResource)
         {   
+
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             TrainingQuery trainingQuery = mapper.Map<TrainingQueryResource, TrainingQuery>(queryResource);
@@ -57,9 +58,20 @@ namespace Szkolimy_za_darmo_api.Controllers
         [HttpGet("{id}")] 
         public async Task<IActionResult> getTraining(int id)
         {   
-            Training queryResult = await trainingRepository.GetOne(id);
-            var response = mapper.Map<Training, TrainingResource>(queryResult);
+            Training training = await trainingRepository.GetOne(id);
+            var response = mapper.Map<Training, TrainingResource>(training);
             return Ok(response);
+        }
+        [HttpGet("categories")] 
+        public async Task<IActionResult> getAllCategories(){
+            IEnumerable<Category> categories = await trainingRepository.GetAllCategories();
+            return Ok(categories);
+        }
+
+        [HttpGet("localizations")] 
+        public async Task<IActionResult> getAllLocalizations(){
+            IEnumerable<Localization> localizations = await trainingRepository.GetAllLocalizations();
+            return Ok(localizations);
         }
     }
 }
