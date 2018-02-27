@@ -12,30 +12,17 @@ namespace Szkolimy_za_darmo_api.Mapping
     public class MappingProfile : Profile
     {
           public MappingProfile() {
+            CreateMap(typeof(QueryResult<>), typeof(QueryResultResource<>));
             DomainToResource();
             ResourceToDomain();
 
-            CreateMap<TrainingQueryResource, TrainingQuery>()
-                .ForMember(
-                    trainingQuery => trainingQuery.Localizations,
-                    opt => opt.MapFrom(
-                        trainingQuery => trainingQuery.Localizations
-                            .Split(',', StringSplitOptions.None)
-                            .Select(Int32.Parse)
-                            .ToArray()
-                    ))
-                .ForMember(
-                    trainingQuery => trainingQuery.Categories,
-                    opt => opt.MapFrom(
-                        trainingQuery => trainingQuery.Categories
-                            .Split(',', StringSplitOptions.None)
-                            .ToArray()
-                    ));
              
           }
 
         private void DomainToResource()
         {
+            CreateMap(typeof(QueryResult<>), typeof(QueryResultResource<>));
+            
             CreateMap<Training, TrainingResource>()
                 .ForMember(
                     trainingResource => trainingResource.MarketStatus,
@@ -50,6 +37,21 @@ namespace Szkolimy_za_darmo_api.Mapping
         }
 
         private void ResourceToDomain() {
+            CreateMap<TrainingQueryResource, TrainingQuery>()
+                .ForMember(
+                    trainingQuery => trainingQuery.Localizations,
+                    opt => opt.MapFrom(
+                        trainingQuery => trainingQuery.Localizations
+                            .Split(',', StringSplitOptions.None)
+                            .Select(Int32.Parse)
+                            .ToArray()
+                    ))
+                .ForMember(
+                    trainingQuery => trainingQuery.Categories,
+                    opt => opt.MapFrom(
+                        trainingQuery => trainingQuery.Categories
+                            .Split(',', StringSplitOptions.None)
+                            .ToArray()));
             CreateMap<TagResource, Tag>();
             CreateMap<SaveTrainingResource, Training>()
                 .ForMember(training => training.Id, opt => opt.Ignore())

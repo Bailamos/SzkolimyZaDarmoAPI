@@ -50,8 +50,9 @@ namespace Szkolimy_za_darmo_api.Controllers
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             TrainingQuery trainingQuery = mapper.Map<TrainingQueryResource, TrainingQuery>(queryResource);
-            IEnumerable<Training> queryResult = await trainingRepository.GetAll(trainingQuery);
-            var response = mapper.Map<IEnumerable<Training>, IEnumerable<TrainingResource>>(queryResult);
+            QueryResult<Training> queryResult = await trainingRepository.GetAll(trainingQuery);
+
+            var response = mapper.Map< QueryResult<Training> , QueryResultResource<TrainingResource> >(queryResult);
             return Ok(response);
         }
 

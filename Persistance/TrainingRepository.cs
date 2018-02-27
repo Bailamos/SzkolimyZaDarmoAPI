@@ -16,7 +16,10 @@ namespace Szkolimy_za_darmo_api.Persistance
         private readonly Dictionary<string, Expression<Func<Training, object>>> COLUMNS_MAP 
             = new Dictionary<string, Expression<Func<Training, object>>>()
         {
-            ["LastUpdate"] = v => v.LastUpdate,
+            ["InsertDate"] = v => v.InsertDate,
+            ["Category"] = v => v.Category,
+            ["Localization"] = v => v.Localization,
+            ["RegisterTo"] = v => v.RegisterTo,
         };
 
         private readonly SzdDbContext context;
@@ -31,7 +34,7 @@ namespace Szkolimy_za_darmo_api.Persistance
             context.Trainings.Add(training);
         }
 
-        public async Task<IEnumerable<Training>> GetAll(TrainingQuery queryObj)
+        public async Task<QueryResult<Training>> GetAll(TrainingQuery queryObj)
         {
             var query = context.Trainings
                 .Include(training => training.MarketStatus)
@@ -45,10 +48,15 @@ namespace Szkolimy_za_darmo_api.Persistance
             if (queryObj.Localizations.Length > 0)
                  query = query.Where(v => queryObj.Localizations.Contains(v.Localization.Id));
 
+            int trainingsCount = query.Count();
             query = query.ApplyOrdering(queryObj, COLUMNS_MAP);
             query = query.ApplyPaging(queryObj);
+            var trainings = await query.ToListAsync();
 
-            return await query.ToListAsync();
+            var queryResult = new QueryResult<Training>();
+            queryResult.items = trainings;
+            queryResult.itemsCount = trainingsCount;
+            return queryResult;
         }
 
         public async Task<Training> GetOne(int id, bool includeRelated = true)
