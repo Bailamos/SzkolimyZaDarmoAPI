@@ -17,8 +17,8 @@ namespace Szkolimy_za_darmo_api.Persistance
             = new Dictionary<string, Expression<Func<Training, object>>>()
         {
             ["InsertDate"] = v => v.InsertDate,
-            ["Category"] = v => v.Category,
-            ["Localization"] = v => v.Localization,
+            ["Category"] = v => v.Category.Name,
+            ["Localization"] = v => v.Localization.voivodeship,
             ["RegisterTo"] = v => v.RegisterTo,
         };
 

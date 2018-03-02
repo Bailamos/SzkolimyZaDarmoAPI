@@ -46,7 +46,9 @@ namespace Szkolimy_za_darmo_api
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseCors(builder => builder.WithOrigins("http://localhost:4200").AllowAnyHeader());
+            app.UseCors(
+                b => b.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().AllowCredentials());
+                
             app.UseMvc();
         }
     }

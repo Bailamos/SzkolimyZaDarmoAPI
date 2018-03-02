@@ -20,11 +20,6 @@ namespace Szkolimy_za_darmo_api.Persistance
             context.Users.Add(user);
         }
 
-        public void AddEntry(Entry entry)
-        {
-            context.Entries.Add(entry);
-        }
-
         public async Task<bool> CheckIfUserExists(string phoneNumber) {
             return await context.Users.AnyAsync(
                 user => user.PhoneNumber == phoneNumber);
@@ -33,6 +28,17 @@ namespace Szkolimy_za_darmo_api.Persistance
         {
             return await context.Users.SingleOrDefaultAsync(
                 user => user.PhoneNumber == phoneNumber);
+        }
+
+        public void AddEntry(Entry entry)
+        {
+            context.Entries.Add(entry);
+        }
+
+        public async Task<bool> CheckIfEntryExists(int trainingId, string phoneNumber)
+        {
+            return await context.Entries.AnyAsync(
+                entry => entry.UserPhoneNumber == phoneNumber && entry.TrainingId == trainingId);
         }
     }
 }

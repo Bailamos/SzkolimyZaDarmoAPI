@@ -12,17 +12,13 @@ namespace Szkolimy_za_darmo_api.Mapping
     public class MappingProfile : Profile
     {
           public MappingProfile() {
-            CreateMap(typeof(QueryResult<>), typeof(QueryResultResource<>));
+            Generics();
             DomainToResource();
-            ResourceToDomain();
-
-             
+            ResourceToDomain();        
           }
 
         private void DomainToResource()
-        {
-            CreateMap(typeof(QueryResult<>), typeof(QueryResultResource<>));
-            
+        {           
             CreateMap<Training, TrainingResource>()
                 .ForMember(
                     trainingResource => trainingResource.MarketStatus,
@@ -34,6 +30,10 @@ namespace Szkolimy_za_darmo_api.Mapping
                         training => training.Tags.Select(Type => new TagResource{Name = Type.TagName})));
             CreateMap<User, SaveUserResource>()
                 .ForMember(saveEntryResource => saveEntryResource.Entry, opt => opt.Ignore());
+            CreateMap<User, UserResource>()
+                .ForMember(
+                    userResource => userResource.IsAlreadyRegistered,
+                    opt => opt.Ignore());
         }
 
         private void ResourceToDomain() {
@@ -66,6 +66,10 @@ namespace Szkolimy_za_darmo_api.Mapping
             CreateMap<SaveInstructorResource,Instructor>()
                 .ForMember(instructor => instructor.Id, opt => opt.Ignore())
                 .ForMember(instructor => instructor.Trainings, opt => opt.Ignore());
+          }
+
+          private void Generics() {
+            CreateMap(typeof(QueryResult<>), typeof(QueryResultResource<>));
           }
     }
 }
