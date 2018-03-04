@@ -31,6 +31,12 @@ namespace Szkolimy_za_darmo_api.Persistance
 
         public void Add(Training training)
         {
+            foreach (TrainingTag trainingTag in training.Tags) {
+                if (!context.Tags.Any(tag => tag.Name == trainingTag.TagName)) {
+                    context.Tags.Add(new Tag{Name = trainingTag.TagName});
+                }
+            }
+
             context.Trainings.Add(training);
         }
 
@@ -48,7 +54,7 @@ namespace Szkolimy_za_darmo_api.Persistance
             if (queryObj.Localizations.Length > 0)
                  query = query.Where(v => queryObj.Localizations.Contains(v.Localization.Id));
 
-            int trainingsCount = query.Count();
+            int trainingsCount = query.ToList().Count();
             query = query.ApplyOrdering(queryObj, COLUMNS_MAP);
             query = query.ApplyPaging(queryObj);
             var trainings = await query.ToListAsync();
@@ -89,5 +95,9 @@ namespace Szkolimy_za_darmo_api.Persistance
             return await context.Localizations.ToListAsync();
         }
 
+        public async Task<IEnumerable<MarketStatus>> getAllStatuses()
+        {
+            return await context.MarketStatuses.ToListAsync();
+        }
     }
 }

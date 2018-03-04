@@ -74,5 +74,11 @@ namespace Szkolimy_za_darmo_api.Controllers
             IEnumerable<Localization> localizations = await trainingRepository.GetAllLocalizations();
             return Ok(localizations);
         }
+
+        [HttpGet("statuses")] 
+        public async Task<IActionResult> getAllStatuses(){
+            IEnumerable<MarketStatus> localizations = await trainingRepository.getAllStatuses();
+            return Ok(localizations);
+        }
     }
 }

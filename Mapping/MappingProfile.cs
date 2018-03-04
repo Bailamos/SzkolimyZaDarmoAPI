@@ -52,13 +52,15 @@ namespace Szkolimy_za_darmo_api.Mapping
                         trainingQuery => trainingQuery.Categories
                             .Split(',', StringSplitOptions.None)
                             .ToArray()));
-            CreateMap<TagResource, Tag>();
+            CreateMap<TagResource, Tag>();     
             CreateMap<SaveTrainingResource, Training>()
                 .ForMember(training => training.Id, opt => opt.Ignore())
                 .ForMember(training => training.LastUpdate, opt => opt.Ignore())
                 .ForMember(
                     training => training.Tags,
-                    opt => opt.MapFrom(trainingResource => trainingResource.Tags.Select(Type => new TrainingTag{TagName = Type})));
+                    opt => opt.MapFrom(
+                        trainingResource => trainingResource.Tags.Select(
+                            Tag => new TrainingTag{TagName = Tag})));                                              
             CreateMap<SaveUserResource, User>()
                 .ForMember(user => user.Entries, opt => opt.Ignore());
             CreateMap<SaveEntryResource, Entry>()
