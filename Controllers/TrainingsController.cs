@@ -63,6 +63,7 @@ namespace Szkolimy_za_darmo_api.Controllers
             var response = mapper.Map<Training, TrainingResource>(training);
             return Ok(response);
         }
+        
         [HttpGet("categories")] 
         public async Task<IActionResult> getAllCategories(){
             IEnumerable<Category> categories = await trainingRepository.GetAllCategories();
