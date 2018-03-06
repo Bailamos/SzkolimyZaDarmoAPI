@@ -19,7 +19,9 @@ namespace Szkolimy_za_darmo_api.Core.Interfaces
         
         Task<IEnumerable<Localization>> GetAllLocalizations();
 
-        Task<IEnumerable<MarketStatus>> getAllStatuses();
+        Task<IEnumerable<MarketStatus>> GetAllStatuses();
+
+        void UpdateTags(Training training);
 
     }
 }

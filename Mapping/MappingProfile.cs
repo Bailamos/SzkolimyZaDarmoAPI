@@ -56,11 +56,20 @@ namespace Szkolimy_za_darmo_api.Mapping
             CreateMap<SaveTrainingResource, Training>()
                 .ForMember(training => training.Id, opt => opt.Ignore())
                 .ForMember(training => training.LastUpdate, opt => opt.Ignore())
-                .ForMember(
-                    training => training.Tags,
-                    opt => opt.MapFrom(
-                        trainingResource => trainingResource.Tags.Select(
-                            Tag => new TrainingTag{TagName = Tag})));                                              
+                .ForMember(training => training.Tags, opt => opt.Ignore()) 
+                .AfterMap((saveTrainingResource, training) => {
+                    var removedTags = training.Tags
+                        .Where(trainingTag => !saveTrainingResource.Tags.Contains(trainingTag.TagName)).ToList();
+                    foreach (var f in removedTags)
+                        training.Tags.Remove(f);
+
+                    var addedTags = saveTrainingResource.Tags
+                        .Where(tag => !training.Tags.Any(trainingTag => trainingTag.TagName == tag))
+                        .Select(tag => new TrainingTag { TagName = tag })
+                        .ToList();   
+                    foreach (var f in addedTags)
+                        training.Tags.Add(f);
+                });                                            
             CreateMap<SaveUserResource, User>()
                 .ForMember(user => user.Entries, opt => opt.Ignore());
             CreateMap<SaveEntryResource, Entry>()

@@ -6,6 +6,7 @@ namespace Szkolimy_za_darmo_api.Controllers.Resources.Query
 {
     public class TrainingQueryResource
     {
+        public int? Instructor { get; set; }
         public string Localizations { get; set; }
         public string Categories { get; set; }
         public string SortBy { get; set; }

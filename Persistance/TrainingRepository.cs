@@ -53,6 +53,8 @@ namespace Szkolimy_za_darmo_api.Persistance
                  query = query.Where(v => queryObj.Categories.Contains(v.Category.Name));
             if (queryObj.Localizations.Length > 0)
                  query = query.Where(v => queryObj.Localizations.Contains(v.Localization.Id));
+            if (queryObj.Instructor.HasValue)
+                 query = query.Where(v => queryObj.Instructor == v.InstructorId);
 
             int trainingsCount = query.ToList().Count();
             query = query.ApplyOrdering(queryObj, COLUMNS_MAP);
@@ -73,6 +75,7 @@ namespace Szkolimy_za_darmo_api.Persistance
                     .Include(training => training.Category)
                     .Include(training => training.Tags)
                     .Include(training => training.Localization)
+                    .Include(training => training.Instructor)
                     .SingleOrDefaultAsync(training => training.Id == id);
             else
                 return await context.Trainings
@@ -81,10 +84,16 @@ namespace Szkolimy_za_darmo_api.Persistance
 
         public void Remove(Training training)
         {
-            throw new System.NotImplementedException();
+            context.Trainings.Remove(training);
         }
 
-        
+        public void UpdateTags(Training training) {
+            foreach (TrainingTag trainingTag in training.Tags) {
+                if (!context.Tags.Any(tag => tag.Name == trainingTag.TagName)) {
+                    context.Tags.Add(new Tag{Name = trainingTag.TagName});
+                }
+            }
+        }
         public async Task<IEnumerable<Category>> GetAllCategories()
         {
             return await context.Categories.ToListAsync();
@@ -95,7 +104,7 @@ namespace Szkolimy_za_darmo_api.Persistance
             return await context.Localizations.ToListAsync();
         }
 
-        public async Task<IEnumerable<MarketStatus>> getAllStatuses()
+        public async Task<IEnumerable<MarketStatus>> GetAllStatuses()
         {
             return await context.MarketStatuses.ToListAsync();
         }
