@@ -28,12 +28,21 @@ namespace Szkolimy_za_darmo_api.Mapping
                     trainingResource => trainingResource.Tags,
                     opt => opt.MapFrom(
                         training => training.Tags.Select(Type => new TagResource{Name = Type.TagName})));
+
+            CreateMap<Training, InstructorTrainingResource>()
+                .ForMember(
+                    instructorTrainingResource => instructorTrainingResource.Tags,
+                    opt => opt.MapFrom(
+                        training => training.Tags.Select(Type => new TagResource{Name = Type.TagName})));
+
             CreateMap<User, SaveUserResource>()
                 .ForMember(saveEntryResource => saveEntryResource.Entry, opt => opt.Ignore());
+
             CreateMap<User, UserResource>()
                 .ForMember(
                     userResource => userResource.IsAlreadyRegistered,
                     opt => opt.Ignore());
+    
         }
 
         private void ResourceToDomain() {
@@ -52,7 +61,9 @@ namespace Szkolimy_za_darmo_api.Mapping
                         trainingQuery => trainingQuery.Categories
                             .Split(',', StringSplitOptions.None)
                             .ToArray()));
-            CreateMap<TagResource, Tag>();     
+
+            CreateMap<TagResource, Tag>();   
+
             CreateMap<SaveTrainingResource, Training>()
                 .ForMember(training => training.Id, opt => opt.Ignore())
                 .ForMember(training => training.LastUpdate, opt => opt.Ignore())
@@ -72,8 +83,10 @@ namespace Szkolimy_za_darmo_api.Mapping
                 });                                            
             CreateMap<SaveUserResource, User>()
                 .ForMember(user => user.Entries, opt => opt.Ignore());
+
             CreateMap<SaveEntryResource, Entry>()
                 .ForMember(entry => entry.TrainingId, opt => opt.MapFrom(saveEntryResource => saveEntryResource.TrainingId));
+                
             CreateMap<SaveInstructorResource,Instructor>()
                 .ForMember(instructor => instructor.Id, opt => opt.Ignore())
                 .ForMember(instructor => instructor.Trainings, opt => opt.Ignore());

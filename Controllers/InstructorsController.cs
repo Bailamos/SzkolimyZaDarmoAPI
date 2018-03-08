@@ -1,9 +1,12 @@
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Szkolimy_za_darmo_api.Controllers.Resources.Query;
+using Szkolimy_za_darmo_api.Controllers.Resources.Return;
 using Szkolimy_za_darmo_api.Controllers.Resources.Save;
 using Szkolimy_za_darmo_api.Core.Interfaces;
 using Szkolimy_za_darmo_api.Core.Models;
+using Szkolimy_za_darmo_api.Core.Models.Query;
 
 namespace Szkolimy_za_darmo_api.Controllers
 {
@@ -21,6 +24,14 @@ namespace Szkolimy_za_darmo_api.Controllers
             this.mapper = mapper;
         }
 
+        [HttpGet] 
+        public async Task<IActionResult> getInstructors()
+        {   
+            var queryResult = await instructorRepository.GetAll();
+            var response = mapper.Map<QueryResult<Instructor> , QueryResultResource<InstructorResource> >(queryResult);
+            return Ok(response);
+        }
+
         [HttpPost]
         public async Task<IActionResult> createInstructor([FromBody] SaveInstructorResource instructorResource)
         {
@@ -33,6 +44,29 @@ namespace Szkolimy_za_darmo_api.Controllers
             instructor = await instructorRepository.GetOne(instructor.Id);
             var response = mapper.Map<Instructor, SaveInstructorResource>(instructor);
             return Ok(response);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> getInstructor(int id) {
+            Instructor instructor = await instructorRepository.GetOne(id);
+            if (instructor == null) {
+                return NotFound();
+            }
+
+            var response = mapper.Map<Instructor, InstructorResource>(instructor);
+            return Ok(response);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> removeInstructor(int id) {
+            Instructor instructor = await instructorRepository.GetOne(id);
+            if (instructor == null) {
+                return NotFound();
+            }
+
+            instructorRepository.Remove(instructor);
+            await unitOfWork.CompleteAsync();
+            return Ok(id);
         }
     }
 }

@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Szkolimy_za_darmo_api.Core.Models;
+using Szkolimy_za_darmo_api.Core.Models.Query;
 
 namespace Szkolimy_za_darmo_api.Core.Interfaces
 {
@@ -8,5 +10,9 @@ namespace Szkolimy_za_darmo_api.Core.Interfaces
         void Add(Instructor instructor);
 
         Task<Instructor> GetOne(int id);
+
+        Task<QueryResult<Instructor>> GetAll();
+
+        void Remove(Instructor instructor);
     }
 }
