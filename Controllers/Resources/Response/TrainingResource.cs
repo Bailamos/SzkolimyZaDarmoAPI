@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
+using Szkolimy_za_darmo_api.Controllers.Resources.Response;
 
 namespace Szkolimy_za_darmo_api.Controllers.Resources.Return
 {
@@ -18,7 +19,7 @@ namespace Szkolimy_za_darmo_api.Controllers.Resources.Return
         public CategoryResource Category {get; set;}
         public MarketStatusResource MarketStatus {get; set;}
         public LocalizationResource Localization {get; set;}
-        public InstructorResource Instructor {get; set;}
+        public TrainingInstructorResource Instructor {get; set;}
         public TrainingResource() {
             Tags = new Collection<TagResource>();
         }

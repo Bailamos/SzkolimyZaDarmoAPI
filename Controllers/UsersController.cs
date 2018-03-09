@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -39,6 +40,7 @@ namespace Szkolimy_za_darmo_api.Controllers
             }
             
             Entry entry = mapper.Map<SaveEntryResource, Entry>(userResource.Entry);
+            entry.InsertDate = DateTime.Now;
             entry.UserPhoneNumber = user.PhoneNumber;  
             bool isAlreadyRegistered = true;
             if (!await userRepository.CheckIfEntryExists(entry.TrainingId, entry.UserPhoneNumber)){
@@ -52,6 +54,22 @@ namespace Szkolimy_za_darmo_api.Controllers
             var result = mapper.Map<User, UserResource>(user);
             result.IsAlreadyRegistered = isAlreadyRegistered;
             return Ok(result);
+        }
+
+        [HttpGet] 
+        public async Task<IActionResult> getUsers()
+        {   
+            IEnumerable<User> users = await userRepository.GetAll();
+            var response = mapper.Map<IEnumerable<User>, IEnumerable<UserResource>>(users);
+            return Ok(response);
+        }
+
+        [HttpGet("{phoneNumber}")] 
+        public async Task<IActionResult> getUser(string phoneNumber)
+        {   
+            User user = await userRepository.GetOne(phoneNumber);
+            var response = mapper.Map<User, UserResource>(user);
+            return Ok(response);
         }
     }
 }

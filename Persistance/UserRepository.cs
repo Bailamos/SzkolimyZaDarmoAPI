@@ -20,14 +20,27 @@ namespace Szkolimy_za_darmo_api.Persistance
             context.Users.Add(user);
         }
 
+        public async Task<IEnumerable<User>> GetAll() {
+            return await context.Users.ToListAsync();
+        }
         public async Task<bool> CheckIfUserExists(string phoneNumber) {
             return await context.Users.AnyAsync(
                 user => user.PhoneNumber == phoneNumber);
         }
         public async Task<User> GetOne(string phoneNumber)
         {
-            return await context.Users.SingleOrDefaultAsync(
-                user => user.PhoneNumber == phoneNumber);
+            return await context
+                .Users
+                .Include(user => user.Entries)
+                    .ThenInclude(entry => entry.Training)
+                      .ThenInclude(training => training.Category)
+                .Include(user => user.Entries)
+                    .ThenInclude(entry => entry.Training)
+                      .ThenInclude(training => training.Localization)
+                .Include(user => user.Entries)
+                    .ThenInclude(entry => entry.Training)
+                      .ThenInclude(training => training.MarketStatus)
+                .SingleOrDefaultAsync(user => user.PhoneNumber == phoneNumber);
         }
 
         public void AddEntry(Entry entry)

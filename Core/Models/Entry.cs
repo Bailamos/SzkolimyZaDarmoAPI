@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Szkolimy_za_darmo_api.Core.Models
@@ -7,6 +8,7 @@ namespace Szkolimy_za_darmo_api.Core.Models
     {
         public string UserPhoneNumber{get; set;}
         public int TrainingId{get; set;}
+        public DateTime InsertDate{get; set;}
         public Training Training {get; set;}
         public User user {get; set;}
     }

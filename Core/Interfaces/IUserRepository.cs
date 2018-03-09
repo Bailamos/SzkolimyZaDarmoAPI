@@ -6,6 +6,7 @@ namespace Szkolimy_za_darmo_api.Core.Interfaces
 {
     public interface IUserRepository
     {
+        Task<IEnumerable<User>> GetAll();
         Task<User> GetOne(string id);
 
         void Add(User user);
