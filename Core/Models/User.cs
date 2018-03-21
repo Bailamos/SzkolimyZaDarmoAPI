@@ -17,9 +17,11 @@ namespace Szkolimy_za_darmo_api.Core.Models
         [Required]
         public string Surname {get; set;}
         public ICollection<Entry> Entries {get; set;}
+        public ICollection<Reminder> Reminders {get; set;}
 
         public User(){
-            Entries = new Collection<Entry>();
+            this.Entries = new Collection<Entry>();
+            this.Reminders = new Collection<Reminder>();
         }
 
     }

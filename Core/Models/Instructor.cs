@@ -18,9 +18,11 @@ namespace Szkolimy_za_darmo_api.Core.Models
         [Required]
         public string Email {get; set;}
         public ICollection<Training> Trainings {get; set;}
+        public ICollection<Reminder> Reminders {get; set;}
 
         public Instructor(){
-            Trainings = new Collection<Training>();
+            this.Trainings = new Collection<Training>();
+            this.Reminders = new Collection<Reminder>();
         }
     }
 }

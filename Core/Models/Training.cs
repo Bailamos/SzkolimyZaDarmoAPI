@@ -31,7 +31,6 @@ namespace Szkolimy_za_darmo_api.Core.Models
         public Instructor Instructor {get; set;}
         public ICollection<Entry> Entries {get; set;}
         public ICollection<TrainingTag> Tags {get; set;}
-
         public Training() {
             this.Tags = new Collection<TrainingTag>();
             this.Entries = new Collection<Entry>();
