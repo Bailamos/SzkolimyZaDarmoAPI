@@ -14,5 +14,7 @@ namespace Szkolimy_za_darmo_api.Core.Interfaces
         Task<QueryResult<Instructor>> GetAll();
 
         void Remove(Instructor instructor);
+
+        void AddReminder(Reminder reminder);
     }
 }

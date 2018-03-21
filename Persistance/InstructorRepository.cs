@@ -52,5 +52,10 @@ namespace Szkolimy_za_darmo_api.Persistance
         public void Remove(Instructor instructor) {
             context.Instructors.Remove(instructor);
         }
+
+        public void AddReminder(Reminder reminder)
+        {
+            context.Reminders.Add(reminder);
+        }
     }
 }

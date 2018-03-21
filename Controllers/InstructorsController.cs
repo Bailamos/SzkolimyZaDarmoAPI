@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Szkolimy_za_darmo_api.Controllers.Resources.Query;
+using Szkolimy_za_darmo_api.Controllers.Resources.Response;
 using Szkolimy_za_darmo_api.Controllers.Resources.Return;
 using Szkolimy_za_darmo_api.Controllers.Resources.Save;
 using Szkolimy_za_darmo_api.Core.Interfaces;
@@ -67,6 +68,19 @@ namespace Szkolimy_za_darmo_api.Controllers
             instructorRepository.Remove(instructor);
             await unitOfWork.CompleteAsync();
             return Ok(id);
+        }
+
+        [HttpPost("{reminders}")]
+        public async Task<IActionResult> createReminder([FromBody] SaveReminderResource reminderResource) {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            
+            Reminder reminder = mapper.Map<SaveReminderResource, Reminder>(reminderResource);
+            instructorRepository.AddReminder(reminder);
+            await unitOfWork.CompleteAsync();
+        
+            var response = mapper.Map<Reminder, ReminderResource>(reminder);
+            
+            return Ok(response);
         }
     }
 }
