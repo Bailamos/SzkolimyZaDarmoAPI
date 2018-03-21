@@ -46,6 +46,7 @@ namespace Szkolimy_za_darmo_api.Persistance
                     .ThenInclude(training => training.Tags)
                 .Include(instructor => instructor.Trainings)
                     .ThenInclude(training => training.Localization)
+                .Include(instructor => instructor.Reminders)
                 .SingleOrDefaultAsync(instructor => instructor.Id == id);
         }
 
@@ -56,6 +57,16 @@ namespace Szkolimy_za_darmo_api.Persistance
         public void AddReminder(Reminder reminder)
         {
             context.Reminders.Add(reminder);
+        }
+
+        public void RemoveReminder(Reminder reminder)
+        {
+           context.Reminders.Remove(reminder);
+        }
+
+        public async Task<Reminder> GetReminder(int id)
+        {
+            return await context.Reminders.SingleOrDefaultAsync(reminder => reminder.Id == id);
         }
     }
 }

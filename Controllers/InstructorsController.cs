@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -70,16 +71,47 @@ namespace Szkolimy_za_darmo_api.Controllers
             return Ok(id);
         }
 
-        [HttpPost("{reminders}")]
-        public async Task<IActionResult> createReminder([FromBody] SaveReminderResource reminderResource) {
+        [HttpPost("{instructorId}/reminders")]
+        public async Task<IActionResult> createReminder(int instructorId, [FromBody] SaveReminderResource reminderResource) {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            
+            Instructor instructor = await instructorRepository.GetOne(instructorId);
+            if (instructor == null) {
+                return NotFound();
+            }
+
             Reminder reminder = mapper.Map<SaveReminderResource, Reminder>(reminderResource);
+            reminder.InstructorId = instructorId;
             instructorRepository.AddReminder(reminder);
             await unitOfWork.CompleteAsync();
         
             var response = mapper.Map<Reminder, ReminderResource>(reminder);
-            
+            return Ok(response);
+        }
+
+        [HttpDelete("{instructorId}/reminders/{reminderId}")]
+        public async Task<IActionResult> createReminder(int instructorId, int reminderId) {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            Reminder reminder = await instructorRepository.GetReminder(reminderId);
+            if(reminder == null) {
+                return NotFound();
+            }
+            instructorRepository.RemoveReminder(reminder);
+            await unitOfWork.CompleteAsync();
+    
+            var response = mapper.Map<Reminder, ReminderResource>(reminder);
+            return Ok(response);
+        }
+
+        [HttpGet("{instructorId}/reminders")]
+        public async Task<IActionResult> getReminders(int instructorId) {
+            Instructor instructor = await instructorRepository.GetOne(instructorId);
+            if (instructor == null) {
+                return NotFound();
+            }
+         
+            ICollection<Reminder> reminders = instructor.Reminders;
+            var response = mapper.Map<ICollection<Reminder>, ICollection<ReminderResource>>(reminders);
             return Ok(response);
         }
     }
