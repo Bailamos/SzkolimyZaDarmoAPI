@@ -16,8 +16,7 @@ namespace Szkolimyzadarmoapi.Migrations
                         .Annotation("MySQL:AutoIncrement", true),
                     Description = table.Column<string>(nullable: true),
                     DueDate = table.Column<DateTime>(nullable: false),
-                    InstructorId = table.Column<int>(nullable: false),
-                    UserPhoneNumber = table.Column<string>(nullable: true)
+                    InstructorId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -28,23 +27,12 @@ namespace Szkolimyzadarmoapi.Migrations
                         principalTable: "instructors",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Reminders_users_UserPhoneNumber",
-                        column: x => x.UserPhoneNumber,
-                        principalTable: "users",
-                        principalColumn: "PhoneNumber",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reminders_InstructorId",
                 table: "Reminders",
                 column: "InstructorId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Reminders_UserPhoneNumber",
-                table: "Reminders",
-                column: "UserPhoneNumber");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

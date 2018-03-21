@@ -104,13 +104,9 @@ namespace Szkolimyzadarmoapi.Migrations
 
                     b.Property<int>("InstructorId");
 
-                    b.Property<string>("UserPhoneNumber");
-
                     b.HasKey("Id");
 
                     b.HasIndex("InstructorId");
-
-                    b.HasIndex("UserPhoneNumber");
 
                     b.ToTable("Reminders");
                 });
@@ -216,10 +212,6 @@ namespace Szkolimyzadarmoapi.Migrations
                         .WithMany("Reminders")
                         .HasForeignKey("InstructorId")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Szkolimy_za_darmo_api.Core.Models.User", "User")
-                        .WithMany("Reminders")
-                        .HasForeignKey("UserPhoneNumber");
                 });
 
             modelBuilder.Entity("Szkolimy_za_darmo_api.Core.Models.Training", b =>
