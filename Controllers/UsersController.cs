@@ -86,19 +86,20 @@ namespace Szkolimy_za_darmo_api.Controllers
             user.UserLogs.Add(userLog);
             await unitOfWork.CompleteAsync();
 
-            user = await userRepository.GetOne(phoneNumber);
-            var response = mapper.Map<ICollection<UserLog>, ICollection<UserLogResource>>(user.UserLogs);
+            var userLogs = await userRepository.GetUserLogs(phoneNumber);
+            var response = mapper.Map<ICollection<UserLog>, ICollection<UserLogResource>>(userLogs);
             return Ok(response);
         }
 
         [HttpGet("{phoneNumber}/logs")] 
         public async Task<IActionResult> getUserLog(string phoneNumber)
         {   
-            User user = await userRepository.GetOne(phoneNumber);
-            if (user == null) {
+            var userLogs = await userRepository.GetUserLogs(phoneNumber);
+            if (userLogs.Count == 0) {
                 return NotFound();
             }
-            var response = mapper.Map<ICollection<UserLog>, ICollection<UserLogResource>>(user.UserLogs);
+
+            var response = mapper.Map<ICollection<UserLog>, ICollection<UserLogResource>>(userLogs);
             return Ok(response);
         }
     }

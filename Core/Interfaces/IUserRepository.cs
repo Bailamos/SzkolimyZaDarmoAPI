@@ -16,5 +16,8 @@ namespace Szkolimy_za_darmo_api.Core.Interfaces
         void AddEntry(Entry entry);
 
         Task<bool> CheckIfEntryExists(int trainingId, string phoneNumber);
+
+        Task<ICollection<UserLog>> GetUserLogs(string userId);
+    
     }
 }

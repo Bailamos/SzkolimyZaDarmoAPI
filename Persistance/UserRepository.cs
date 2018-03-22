@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Szkolimy_za_darmo_api.Core.Interfaces;
@@ -29,8 +30,7 @@ namespace Szkolimy_za_darmo_api.Persistance
         }
         public async Task<User> GetOne(string phoneNumber)
         {
-            return await context
-                .Users
+            return await context.Users
                 .Include(user => user.Entries)
                     .ThenInclude(entry => entry.Training)
                       .ThenInclude(training => training.Category)
@@ -53,6 +53,14 @@ namespace Szkolimy_za_darmo_api.Persistance
         {
             return await context.Entries.AnyAsync(
                 entry => entry.UserPhoneNumber == phoneNumber && entry.TrainingId == trainingId);
+        }
+
+        public async Task<ICollection<UserLog>> GetUserLogs(string userPhoneNumber)
+        {
+            return await context.UserLog
+                .Where(log => log.UserPhoneNumber == userPhoneNumber)
+                .OrderByDescending(log => log.Date)
+                .ToListAsync();
         }
     }
 }
