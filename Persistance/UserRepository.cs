@@ -40,6 +40,7 @@ namespace Szkolimy_za_darmo_api.Persistance
                 .Include(user => user.Entries)
                     .ThenInclude(entry => entry.Training)
                       .ThenInclude(training => training.MarketStatus)
+                .Include(user => user.UserLogs)
                 .SingleOrDefaultAsync(user => user.PhoneNumber == phoneNumber);
         }
 

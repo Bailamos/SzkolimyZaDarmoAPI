@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Szkolimy_za_darmo_api.Controllers.Resources.Response;
 using Szkolimy_za_darmo_api.Controllers.Resources.Return;
 using Szkolimy_za_darmo_api.Controllers.Resources.Save;
 using Szkolimy_za_darmo_api.Core.Interfaces;
@@ -69,6 +70,35 @@ namespace Szkolimy_za_darmo_api.Controllers
         {   
             User user = await userRepository.GetOne(phoneNumber);
             var response = mapper.Map<User, UserResource>(user);
+            return Ok(response);
+        }
+
+        [HttpPost("{phoneNumber}/logs")] 
+        public async Task<IActionResult> createUserLog(string phoneNumber, [FromBody] SaveUserLogResource userLogResource)
+        {   
+            User user = await userRepository.GetOne(phoneNumber);
+            if (user == null) {
+                return NotFound();
+            }
+            UserLog userLog = mapper.Map<SaveUserLogResource, UserLog>(userLogResource);
+            userLog.Date = DateTime.Now;
+            userLog.UserPhoneNumber = phoneNumber;
+            user.UserLogs.Add(userLog);
+            await unitOfWork.CompleteAsync();
+
+            user = await userRepository.GetOne(phoneNumber);
+            var response = mapper.Map<ICollection<UserLog>, ICollection<UserLogResource>>(user.UserLogs);
+            return Ok(response);
+        }
+
+        [HttpGet("{phoneNumber}/logs")] 
+        public async Task<IActionResult> getUserLog(string phoneNumber)
+        {   
+            User user = await userRepository.GetOne(phoneNumber);
+            if (user == null) {
+                return NotFound();
+            }
+            var response = mapper.Map<ICollection<UserLog>, ICollection<UserLogResource>>(user.UserLogs);
             return Ok(response);
         }
     }

@@ -93,6 +93,12 @@ namespace Szkolimy_za_darmo_api.Mapping
 
             CreateMap<SaveReminderResource, Reminder>()
                 .ForMember(reminder => reminder.Id, opt => opt.Ignore());
+
+            CreateMap<SaveUserLogResource, UserLog>()
+                .ForMember(log => log.Id, opt => opt.Ignore())
+                .ForMember(log => log.Date, opt => opt.Ignore())
+                .ForMember(log => log.User, opt => opt.Ignore())
+                .ForMember(log => log.UserPhoneNumber, opt => opt.Ignore());
           }
 
           private void Generics() {
