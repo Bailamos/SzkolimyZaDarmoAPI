@@ -22,19 +22,23 @@ namespace Szkolimy_za_darmo_api.Persistance
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
-            modelBuilder.Entity<TrainingTag>().HasKey(TrainingType => new {
+            modelBuilder.Entity<TrainingTag>()
+                .HasKey(TrainingType => new {
                     TrainingType.TrainingId,
                     TrainingType.TagName
                 });
-            modelBuilder.Entity<Entry>().HasKey(Entry => new {
+            modelBuilder.Entity<Entry>()
+                .HasKey(Entry => new {
                     Entry.TrainingId,
                     Entry.UserPhoneNumber
                 });
-            modelBuilder.Entity<InstructorRole>().HasKey(InstructorRole => new {
+            modelBuilder.Entity<InstructorRole>()
+                .HasKey(InstructorRole => new {
                     InstructorRole.InstructorId,
                     InstructorRole.RoleId
                 });
-            modelBuilder.Entity<MarketStatus>().HasIndex(MarketStatus => MarketStatus.Status).IsUnique();
+            modelBuilder.Entity<MarketStatus>()
+                .HasIndex(MarketStatus => MarketStatus.Status).IsUnique();
         }
     }
 }

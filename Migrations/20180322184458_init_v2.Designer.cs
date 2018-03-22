@@ -10,8 +10,8 @@ using Szkolimy_za_darmo_api.Persistance;
 namespace Szkolimyzadarmoapi.Migrations
 {
     [DbContext(typeof(SzdDbContext))]
-    [Migration("20180322175317_Instructor roles")]
-    partial class Instructorroles
+    [Migration("20180322184458_init_v2")]
+    partial class init_v2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -55,6 +55,9 @@ namespace Szkolimyzadarmoapi.Migrations
                     b.Property<bool>("IsActivated");
 
                     b.Property<string>("Name")
+                        .IsRequired();
+
+                    b.Property<string>("Password")
                         .IsRequired();
 
                     b.Property<string>("PhoneNumber")

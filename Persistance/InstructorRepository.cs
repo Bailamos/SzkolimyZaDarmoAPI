@@ -17,6 +17,13 @@ namespace Szkolimy_za_darmo_api.Persistance
             this.context = context;
         }
 
+        public async Task<Instructor> LogIn(string email, string password) {
+            return await this.context.Instructors
+                .Where(instructor => instructor.Email == email && instructor.Password == password)
+                .SingleOrDefaultAsync();
+
+        }
+
         public void Add(Instructor instructor)
         {
            context.Instructors.Add(instructor);
@@ -49,6 +56,7 @@ namespace Szkolimy_za_darmo_api.Persistance
                 .Include(instructor => instructor.Reminders)
                 .SingleOrDefaultAsync(instructor => instructor.Id == id);
         }
+
 
         public void Remove(Instructor instructor) {
             context.Instructors.Remove(instructor);

@@ -17,9 +17,18 @@ namespace Szkolimy_za_darmo_api.Controllers
         private readonly IMapper mapper;
         private readonly IUnitOfWork unitOfWork;
         private readonly IUserRepository userRepository;
+        private readonly IEmailService emailService;
+        private readonly ITrainingRepository trainingRepository;
 
-        public UsersController(IMapper mapper, IUnitOfWork unitOfWork, IUserRepository userRepository)
+        public UsersController(
+            IMapper mapper, 
+            IUnitOfWork unitOfWork, 
+            ITrainingRepository trainingRepository, 
+            IUserRepository userRepository, 
+            IEmailService emailService)
         {
+            this.trainingRepository = trainingRepository;
+            this.emailService = emailService;
             this.userRepository = userRepository;
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
@@ -31,25 +40,37 @@ namespace Szkolimy_za_darmo_api.Controllers
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             User user;
-            if (await userRepository.CheckIfUserExists(userResource.PhoneNumber)){
+            if (await userRepository.CheckIfUserExists(userResource.PhoneNumber))
+            {
                 user = await userRepository.GetOne(userResource.PhoneNumber);
                 mapper.Map<SaveUserResource, User>(userResource, user);
                 await unitOfWork.CompleteAsync();
-            } else {
+            }
+            else
+            {
                 user = mapper.Map<SaveUserResource, User>(userResource);
                 userRepository.Add(user);
             }
-            
+
             Entry entry = mapper.Map<SaveEntryResource, Entry>(userResource.Entry);
             entry.InsertDate = DateTime.Now;
-            entry.UserPhoneNumber = user.PhoneNumber;  
+            entry.UserPhoneNumber = user.PhoneNumber;
+
             bool isAlreadyRegistered = true;
-            if (!await userRepository.CheckIfEntryExists(entry.TrainingId, entry.UserPhoneNumber)){
+            if (!await userRepository.CheckIfEntryExists(entry.TrainingId, entry.UserPhoneNumber))
+            {
                 userRepository.AddEntry(entry);
                 await unitOfWork.CompleteAsync();
                 isAlreadyRegistered = false;
+                Training training = await trainingRepository.GetOne(entry.TrainingId);
+                if (training == null) {
+                    return NotFound();
+                }
+                string instructorEmail = training.Instructor.Email;
+                emailService.sendEmail(instructorEmail, "test", "mail do szkoleniowca");
+                emailService.sendEmail("cieciumaly@gmail.com", "test", "mail do uczestnika");
             }
-            
+
 
             user = await userRepository.GetOne(user.PhoneNumber);
             var result = mapper.Map<User, UserResource>(user);
@@ -57,27 +78,28 @@ namespace Szkolimy_za_darmo_api.Controllers
             return Ok(result);
         }
 
-        [HttpGet] 
+        [HttpGet]
         public async Task<IActionResult> getUsers()
-        {   
+        {
             IEnumerable<User> users = await userRepository.GetAll();
             var response = mapper.Map<IEnumerable<User>, IEnumerable<UserResource>>(users);
             return Ok(response);
         }
 
-        [HttpGet("{phoneNumber}")] 
+        [HttpGet("{phoneNumber}")]
         public async Task<IActionResult> getUser(string phoneNumber)
-        {   
+        {
             User user = await userRepository.GetOne(phoneNumber);
             var response = mapper.Map<User, UserResource>(user);
             return Ok(response);
         }
 
-        [HttpPost("{phoneNumber}/logs")] 
+        [HttpPost("{phoneNumber}/logs")]
         public async Task<IActionResult> createUserLog(string phoneNumber, [FromBody] SaveUserLogResource userLogResource)
-        {   
+        {
             User user = await userRepository.GetOne(phoneNumber);
-            if (user == null) {
+            if (user == null)
+            {
                 return NotFound();
             }
             UserLog userLog = mapper.Map<SaveUserLogResource, UserLog>(userLogResource);
@@ -91,11 +113,12 @@ namespace Szkolimy_za_darmo_api.Controllers
             return Ok(response);
         }
 
-        [HttpGet("{phoneNumber}/logs")] 
+        [HttpGet("{phoneNumber}/logs")]
         public async Task<IActionResult> getUserLog(string phoneNumber)
-        {   
+        {
             var userLogs = await userRepository.GetUserLogs(phoneNumber);
-            if (userLogs.Count == 0) {
+            if (userLogs.Count == 0)
+            {
                 return NotFound();
             }
 

@@ -53,7 +53,12 @@ namespace Szkolimyzadarmoapi.Migrations
 
                     b.Property<bool>("IsActivated");
 
+                    b.Property<bool>("IsAdmin");
+
                     b.Property<string>("Name")
+                        .IsRequired();
+
+                    b.Property<string>("Password")
                         .IsRequired();
 
                     b.Property<string>("PhoneNumber")

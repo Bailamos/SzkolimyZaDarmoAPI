@@ -7,6 +7,8 @@ namespace Szkolimy_za_darmo_api.Core.Interfaces
 {
     public interface IInstructorRepository
     {
+        Task<Instructor> LogIn(string email, string password);
+        
         void Add(Instructor instructor);
 
         Task<Instructor> GetOne(int id);

@@ -16,5 +16,8 @@ namespace Szkolimy_za_darmo_api.Controllers.Resources.Save
              + "[!#$%&'*+\\-/=?^_`{|}~\\.\\w]{0,}[!#$%&'*+\\-/=?^_`{|}~\\w]))"
              + "[@]\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*)$")]
         public string Email {get; set;}
+
+        [Required]
+        public string Password {get; set;}
     }
 }

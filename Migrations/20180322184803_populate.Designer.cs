@@ -10,8 +10,8 @@ using Szkolimy_za_darmo_api.Persistance;
 namespace Szkolimyzadarmoapi.Migrations
 {
     [DbContext(typeof(SzdDbContext))]
-    [Migration("20180224003441_instructors")]
-    partial class instructors
+    [Migration("20180322184803_populate")]
+    partial class populate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -35,6 +35,8 @@ namespace Szkolimyzadarmoapi.Migrations
 
                     b.Property<string>("UserPhoneNumber");
 
+                    b.Property<DateTime>("InsertDate");
+
                     b.HasKey("TrainingId", "UserPhoneNumber");
 
                     b.HasIndex("UserPhoneNumber");
@@ -50,7 +52,12 @@ namespace Szkolimyzadarmoapi.Migrations
                     b.Property<string>("Email")
                         .IsRequired();
 
+                    b.Property<bool>("IsActivated");
+
                     b.Property<string>("Name")
+                        .IsRequired();
+
+                    b.Property<string>("Password")
                         .IsRequired();
 
                     b.Property<string>("PhoneNumber")
@@ -62,6 +69,19 @@ namespace Szkolimyzadarmoapi.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("instructors");
+                });
+
+            modelBuilder.Entity("Szkolimy_za_darmo_api.Core.Models.InstructorRole", b =>
+                {
+                    b.Property<int>("InstructorId");
+
+                    b.Property<int>("RoleId");
+
+                    b.HasKey("InstructorId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("instructor_roles");
                 });
 
             modelBuilder.Entity("Szkolimy_za_darmo_api.Core.Models.Localization", b =>
@@ -90,6 +110,37 @@ namespace Szkolimyzadarmoapi.Migrations
                         .IsUnique();
 
                     b.ToTable("marketStatuses");
+                });
+
+            modelBuilder.Entity("Szkolimy_za_darmo_api.Core.Models.Reminder", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Description");
+
+                    b.Property<DateTime>("DueDate");
+
+                    b.Property<int>("InstructorId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InstructorId");
+
+                    b.ToTable("Reminders");
+                });
+
+            modelBuilder.Entity("Szkolimy_za_darmo_api.Core.Models.Role", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("RoleName")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.ToTable("roles");
                 });
 
             modelBuilder.Entity("Szkolimy_za_darmo_api.Core.Models.Tag", b =>
@@ -174,6 +225,26 @@ namespace Szkolimyzadarmoapi.Migrations
                     b.ToTable("users");
                 });
 
+            modelBuilder.Entity("Szkolimy_za_darmo_api.Core.Models.UserLog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("Date");
+
+                    b.Property<string>("Description")
+                        .IsRequired();
+
+                    b.Property<string>("UserPhoneNumber")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserPhoneNumber");
+
+                    b.ToTable("UserLog");
+                });
+
             modelBuilder.Entity("Szkolimy_za_darmo_api.Core.Models.Entry", b =>
                 {
                     b.HasOne("Szkolimy_za_darmo_api.Core.Models.Training", "Training")
@@ -184,6 +255,27 @@ namespace Szkolimyzadarmoapi.Migrations
                     b.HasOne("Szkolimy_za_darmo_api.Core.Models.User", "user")
                         .WithMany("Entries")
                         .HasForeignKey("UserPhoneNumber")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Szkolimy_za_darmo_api.Core.Models.InstructorRole", b =>
+                {
+                    b.HasOne("Szkolimy_za_darmo_api.Core.Models.Instructor", "Instructor")
+                        .WithMany()
+                        .HasForeignKey("InstructorId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Szkolimy_za_darmo_api.Core.Models.Role", "role")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Szkolimy_za_darmo_api.Core.Models.Reminder", b =>
+                {
+                    b.HasOne("Szkolimy_za_darmo_api.Core.Models.Instructor", "Instructor")
+                        .WithMany("Reminders")
+                        .HasForeignKey("InstructorId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -220,6 +312,14 @@ namespace Szkolimyzadarmoapi.Migrations
                     b.HasOne("Szkolimy_za_darmo_api.Core.Models.Training", "Training")
                         .WithMany("Tags")
                         .HasForeignKey("TrainingId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Szkolimy_za_darmo_api.Core.Models.UserLog", b =>
+                {
+                    b.HasOne("Szkolimy_za_darmo_api.Core.Models.User", "User")
+                        .WithMany("UserLogs")
+                        .HasForeignKey("UserPhoneNumber")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

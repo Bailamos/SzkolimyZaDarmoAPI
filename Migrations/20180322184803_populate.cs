@@ -23,6 +23,9 @@ namespace Szkolimyzadarmoapi.Migrations
             migrationBuilder.Sql("INSERT INTO tags (name) VALUES ('Przyspieszony')");
             migrationBuilder.Sql("INSERT INTO tags (name) VALUES ('Native speaker')");
             migrationBuilder.Sql("INSERT INTO tags (name) VALUES ('Hiszpanski')");
+
+            migrationBuilder.Sql("INSERT INTO roles (roleName) VALUES ('Admin')");
+            migrationBuilder.Sql("INSERT INTO roles (roleName) VALUES ('Basic')");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -31,6 +34,7 @@ namespace Szkolimyzadarmoapi.Migrations
             migrationBuilder.Sql("DELETE FROM marketstatuses WHERE status IN ('Bezrobotny','Aktywny','Wszystkie')");
             migrationBuilder.Sql("DELETE FROM categories WHERE name IN ('Mechaniczny','Inny','Angielski')");
             migrationBuilder.Sql("DELETE FROM tags WHERE name IN ('Hiszpanski','speaker','Przyspieszony')");
+            migrationBuilder.Sql("DELETE FROM roles WHERE roleName IN ('Admin','Basic')");
         }
     }
 }

@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Szkolimy_za_darmo_api.Core.Interfaces;
 using Szkolimy_za_darmo_api.Persistance;
+using Szkolimy_za_darmo_api.Services;
 
 namespace Szkolimy_za_darmo_api
 {
@@ -33,6 +34,8 @@ namespace Szkolimy_za_darmo_api
             services.AddScoped<ITrainingRepository, TrainingRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IInstructorRepository, InstructorRepository>();
+
+            services.AddScoped<IEmailService, EmailService>();
 
             services.AddAutoMapper();
             services.AddCors();

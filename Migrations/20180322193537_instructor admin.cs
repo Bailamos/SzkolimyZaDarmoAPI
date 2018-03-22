@@ -4,12 +4,12 @@ using System.Collections.Generic;
 
 namespace Szkolimyzadarmoapi.Migrations
 {
-    public partial class Isinstructoractivated : Migration
+    public partial class instructoradmin : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<bool>(
-                name: "IsActivated",
+                name: "IsAdmin",
                 table: "instructors",
                 nullable: false,
                 defaultValue: false);
@@ -18,7 +18,7 @@ namespace Szkolimyzadarmoapi.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "IsActivated",
+                name: "IsAdmin",
                 table: "instructors");
         }
     }

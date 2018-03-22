@@ -34,22 +34,8 @@ namespace Szkolimy_za_darmo_api.Controllers
             return Ok(response);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> createInstructor([FromBody] SaveInstructorResource instructorResource)
-        {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-
-            Instructor instructor = mapper.Map<SaveInstructorResource, Instructor>(instructorResource);
-            instructorRepository.Add(instructor);
-            await unitOfWork.CompleteAsync();
-
-            instructor = await instructorRepository.GetOne(instructor.Id);
-            var response = mapper.Map<Instructor, SaveInstructorResource>(instructor);
-            return Ok(response);
-        }
-
         [HttpPut("{id}")]
-        public async Task<IActionResult> createInstructor(int id)
+        public async Task<IActionResult> activateInstructor(int id)
         {
             Instructor instructor = await instructorRepository.GetOne(id);
              if (instructor == null) {

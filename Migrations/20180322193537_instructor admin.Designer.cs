@@ -10,8 +10,8 @@ using Szkolimy_za_darmo_api.Persistance;
 namespace Szkolimyzadarmoapi.Migrations
 {
     [DbContext(typeof(SzdDbContext))]
-    [Migration("20180322005426_User log")]
-    partial class Userlog
+    [Migration("20180322193537_instructor admin")]
+    partial class instructoradmin
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -54,7 +54,12 @@ namespace Szkolimyzadarmoapi.Migrations
 
                     b.Property<bool>("IsActivated");
 
+                    b.Property<bool>("IsAdmin");
+
                     b.Property<string>("Name")
+                        .IsRequired();
+
+                    b.Property<string>("Password")
                         .IsRequired();
 
                     b.Property<string>("PhoneNumber")
@@ -66,6 +71,19 @@ namespace Szkolimyzadarmoapi.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("instructors");
+                });
+
+            modelBuilder.Entity("Szkolimy_za_darmo_api.Core.Models.InstructorRole", b =>
+                {
+                    b.Property<int>("InstructorId");
+
+                    b.Property<int>("RoleId");
+
+                    b.HasKey("InstructorId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("instructor_roles");
                 });
 
             modelBuilder.Entity("Szkolimy_za_darmo_api.Core.Models.Localization", b =>
@@ -112,6 +130,19 @@ namespace Szkolimyzadarmoapi.Migrations
                     b.HasIndex("InstructorId");
 
                     b.ToTable("Reminders");
+                });
+
+            modelBuilder.Entity("Szkolimy_za_darmo_api.Core.Models.Role", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("RoleName")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.ToTable("roles");
                 });
 
             modelBuilder.Entity("Szkolimy_za_darmo_api.Core.Models.Tag", b =>
@@ -226,6 +257,19 @@ namespace Szkolimyzadarmoapi.Migrations
                     b.HasOne("Szkolimy_za_darmo_api.Core.Models.User", "user")
                         .WithMany("Entries")
                         .HasForeignKey("UserPhoneNumber")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Szkolimy_za_darmo_api.Core.Models.InstructorRole", b =>
+                {
+                    b.HasOne("Szkolimy_za_darmo_api.Core.Models.Instructor", "Instructor")
+                        .WithMany()
+                        .HasForeignKey("InstructorId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Szkolimy_za_darmo_api.Core.Models.Role", "role")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
