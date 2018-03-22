@@ -17,6 +17,7 @@ namespace Szkolimy_za_darmo_api.Core.Models
         public string Surname {get; set;}
         [Required]
         public string Email {get; set;}
+        public bool IsActivated {get; set;}
         public ICollection<Training> Trainings {get; set;}
         public ICollection<Reminder> Reminders {get; set;}
 

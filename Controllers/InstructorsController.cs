@@ -48,6 +48,20 @@ namespace Szkolimy_za_darmo_api.Controllers
             return Ok(response);
         }
 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> createInstructor(int id)
+        {
+            Instructor instructor = await instructorRepository.GetOne(id);
+             if (instructor == null) {
+                return NotFound();
+            }
+            instructor.IsActivated = !instructor.IsActivated;
+            await unitOfWork.CompleteAsync();
+            instructor = await instructorRepository.GetOne(id);
+            var response = mapper.Map<Instructor, InstructorResource>(instructor);
+            return Ok(response);
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> getInstructor(int id) {
             Instructor instructor = await instructorRepository.GetOne(id);
