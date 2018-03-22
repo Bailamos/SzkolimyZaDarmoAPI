@@ -15,6 +15,8 @@ namespace Szkolimy_za_darmo_api.Persistance
         public DbSet<Instructor> Instructors {get; set;}
         public DbSet<Reminder> Reminders {get; set;}
         public DbSet<UserLog> UserLog {get; set;}
+        public DbSet<Role> Roles {get; set;}
+        public DbSet<InstructorRole> InstructorRoles {get; set;}
 
         public SzdDbContext(DbContextOptions<SzdDbContext> options) : base(options) {   
         }
@@ -27,6 +29,10 @@ namespace Szkolimy_za_darmo_api.Persistance
             modelBuilder.Entity<Entry>().HasKey(Entry => new {
                     Entry.TrainingId,
                     Entry.UserPhoneNumber
+                });
+            modelBuilder.Entity<InstructorRole>().HasKey(InstructorRole => new {
+                    InstructorRole.InstructorId,
+                    InstructorRole.RoleId
                 });
             modelBuilder.Entity<MarketStatus>().HasIndex(MarketStatus => MarketStatus.Status).IsUnique();
         }
