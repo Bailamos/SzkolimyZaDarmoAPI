@@ -62,6 +62,15 @@ namespace Szkolimy_za_darmo_api.Mapping
                             .Split(',', StringSplitOptions.None)
                             .ToArray()));
 
+            CreateMap<UserQueryResource, UserQuery>()
+                .ForMember(
+                    userQuery => userQuery.Categories,
+                    opt => opt.MapFrom(
+                        userQuery => userQuery.Categories
+                            .Split(',', StringSplitOptions.None)
+                            .ToArray()
+                    ));
+
             CreateMap<TagResource, Tag>();   
 
             CreateMap<SaveTrainingResource, Training>()

@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Szkolimy_za_darmo_api.Controllers.Resources.Query;
 using Szkolimy_za_darmo_api.Controllers.Resources.Response;
 using Szkolimy_za_darmo_api.Controllers.Resources.Return;
 using Szkolimy_za_darmo_api.Controllers.Resources.Save;
 using Szkolimy_za_darmo_api.Core.Interfaces;
 using Szkolimy_za_darmo_api.Core.Models;
+using Szkolimy_za_darmo_api.Core.Models.Query;
 
 namespace Szkolimy_za_darmo_api.Controllers
 {
@@ -71,10 +73,12 @@ namespace Szkolimy_za_darmo_api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> getUsers()
+        public async Task<IActionResult> getUsers(UserQueryResource queryResource)
         {
-            IEnumerable<User> users = await userRepository.GetAll();
-            var response = mapper.Map<IEnumerable<User>, IEnumerable<UserResource>>(users);
+            UserQuery userQuery = mapper.Map<UserQueryResource, UserQuery>(queryResource);
+            QueryResult<User> queryResult = await userRepository.GetAll(userQuery);
+
+            var response = mapper.Map<QueryResult<User>, QueryResult<UserResource>>(queryResult);
             return Ok(response);
         }
 

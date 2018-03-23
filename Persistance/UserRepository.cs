@@ -1,14 +1,27 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Szkolimy_za_darmo_api.Core.Interfaces;
 using Szkolimy_za_darmo_api.Core.Models;
+using Szkolimy_za_darmo_api.Core.Models.Query;
+using Szkolimy_za_darmo_api.Extensions;
 
 namespace Szkolimy_za_darmo_api.Persistance
 {
     public class UserRepository : IUserRepository
     {
+         private readonly Dictionary<string, Expression<Func<User, object>>> COLUMNS_MAP 
+            = new Dictionary<string, Expression<Func<User, object>>>()
+        {
+            ["Localization"] = v => v.Localization.voivodeship,
+            ["PhoneNumber"] = v => v.PhoneNumber,
+            ["Age"] = v => v.Age,
+            ["Name"] = v => v.Name,
+        };
+
         private readonly SzdDbContext context;
 
         public UserRepository(SzdDbContext context)
@@ -21,8 +34,31 @@ namespace Szkolimy_za_darmo_api.Persistance
             context.Users.Add(user);
         }
 
-        public async Task<IEnumerable<User>> GetAll() {
-            return await context.Users.ToListAsync();
+        public async Task<QueryResult<User>> GetAll(UserQuery queryObj) {
+            var query = context.Users
+                .Include(user => user.Localization)
+                .Include(user => user.Entries)
+                    .ThenInclude(entry => entry.Training)
+                           .ThenInclude(training => training.Category)
+                .AsQueryable();
+
+                
+            if (queryObj.Localization.HasValue)
+                 query = query.Where(v => queryObj.Localization == v.Localization.Id);
+            if (queryObj.Categories.Length > 0)
+                query = query.Where(
+                    v => v.Entries.Any(c => queryObj.Categories.Contains(c.Training.CategoryName)));
+
+            int usersCount = query.ToList().Count();
+            query = query.ApplyOrdering(queryObj, COLUMNS_MAP);
+            query = query.ApplyPaging(queryObj);
+            var users = await query.ToListAsync();
+
+            var queryResult = new QueryResult<User>();
+            queryResult.items = users;
+            queryResult.itemsCount = usersCount;
+            return queryResult;
+             
         }
         public async Task<bool> CheckIfUserExists(string phoneNumber) {
             return await context.Users.AnyAsync(
