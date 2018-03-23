@@ -10,9 +10,10 @@ using Szkolimy_za_darmo_api.Persistance;
 namespace Szkolimyzadarmoapi.Migrations
 {
     [DbContext(typeof(SzdDbContext))]
-    partial class SzdDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180322222221_User age, email and localization")]
+    partial class Userageemailandlocalization
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -223,8 +224,6 @@ namespace Szkolimyzadarmoapi.Migrations
 
                     b.Property<int>("LocalizationId");
 
-                    b.Property<int?>("MarketStatusId");
-
                     b.Property<string>("Name")
                         .IsRequired();
 
@@ -234,8 +233,6 @@ namespace Szkolimyzadarmoapi.Migrations
                     b.HasKey("PhoneNumber");
 
                     b.HasIndex("LocalizationId");
-
-                    b.HasIndex("MarketStatusId");
 
                     b.ToTable("users");
                 });
@@ -336,10 +333,6 @@ namespace Szkolimyzadarmoapi.Migrations
                         .WithMany()
                         .HasForeignKey("LocalizationId")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Szkolimy_za_darmo_api.Core.Models.MarketStatus", "MarketStatus")
-                        .WithMany()
-                        .HasForeignKey("MarketStatusId");
                 });
 
             modelBuilder.Entity("Szkolimy_za_darmo_api.Core.Models.UserLog", b =>

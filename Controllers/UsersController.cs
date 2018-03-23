@@ -39,40 +39,32 @@ namespace Szkolimy_za_darmo_api.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            User user;
-            if (await userRepository.CheckIfUserExists(userResource.PhoneNumber))
-            {
-                user = await userRepository.GetOne(userResource.PhoneNumber);
-                mapper.Map<SaveUserResource, User>(userResource, user);
+            if (await userRepository.CheckIfUserExists(userResource.PhoneNumber)) {
+                updateUser(userResource);
                 await unitOfWork.CompleteAsync();
+            } else {
+                createUser(userResource);
             }
-            else
-            {
-                user = mapper.Map<SaveUserResource, User>(userResource);
-                userRepository.Add(user);
-            }
-
-            Entry entry = mapper.Map<SaveEntryResource, Entry>(userResource.Entry);
-            entry.InsertDate = DateTime.Now;
-            entry.UserPhoneNumber = user.PhoneNumber;
 
             bool isAlreadyRegistered = true;
+            Entry entry = createEntry(userResource);
             if (!await userRepository.CheckIfEntryExists(entry.TrainingId, entry.UserPhoneNumber))
             {
+                isAlreadyRegistered = false;
                 userRepository.AddEntry(entry);
                 await unitOfWork.CompleteAsync();
-                isAlreadyRegistered = false;
-                Training training = await trainingRepository.GetOne(entry.TrainingId);
-                if (training == null) {
-                    return NotFound();
-                }
-                string instructorEmail = training.Instructor.Email;
-                emailService.sendEmail(instructorEmail, "test", "mail do szkoleniowca");
-                emailService.sendEmail("cieciumaly@gmail.com", "test", "mail do uczestnika");
+
+                emailService.sendEmail(
+                    await getTrainingInstructorEmail(entry.TrainingId),
+                    "test", 
+                    "mail do szkoleniowca 1");
+                emailService.sendEmail(
+                    userResource.Email, 
+                    "test", 
+                    "mail do uczestnika 1");
             }
 
-
-            user = await userRepository.GetOne(user.PhoneNumber);
+            var user = await userRepository.GetOne(userResource.PhoneNumber);
             var result = mapper.Map<User, UserResource>(user);
             result.IsAlreadyRegistered = isAlreadyRegistered;
             return Ok(result);
@@ -124,6 +116,31 @@ namespace Szkolimy_za_darmo_api.Controllers
 
             var response = mapper.Map<ICollection<UserLog>, ICollection<UserLogResource>>(userLogs);
             return Ok(response);
+        }
+
+        private async void updateUser(SaveUserResource userResource) {
+            var user = await userRepository.GetOne(userResource.PhoneNumber);
+            mapper.Map<SaveUserResource, User>(userResource, user);
+        }
+
+        private void createUser(SaveUserResource userResource) {
+            var user = mapper.Map<SaveUserResource, User>(userResource);
+            userRepository.Add(user);
+        }
+
+        private Entry createEntry(SaveUserResource userResource) {
+            Entry entry = mapper.Map<SaveEntryResource, Entry>(userResource.Entry);
+            entry.InsertDate = DateTime.Now;
+            entry.UserPhoneNumber = userResource.PhoneNumber;
+            return entry;
+        }
+
+        private async Task<string> getTrainingInstructorEmail(int trainingId) {
+            Training training = await trainingRepository.GetOne(trainingId);
+            if (training == null) {
+                return null;
+            }
+            return training.Instructor.Email;
         }
     }
 }
