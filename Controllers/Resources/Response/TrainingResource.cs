@@ -20,6 +20,7 @@ namespace Szkolimy_za_darmo_api.Controllers.Resources.Return
         public MarketStatusResource MarketStatus {get; set;}
         public LocalizationResource Localization {get; set;}
         public TrainingInstructorResource Instructor {get; set;}
+        public int InstructorId {get; set;}
         public TrainingResource() {
             Tags = new Collection<TagResource>();
         }

@@ -4,7 +4,7 @@ namespace Szkolimy_za_darmo_api.Core.Models.Query
 {
     public class TrainingQuery : IQueryObject
     {
-        public int? Instructor {get; set;}
+        public int? InstructorId {get; set;}
         public string[] Categories {get; set;}
         public int[] Localizations {get; set;}
         public string SortBy { get; set; }

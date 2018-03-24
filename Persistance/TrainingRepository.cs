@@ -53,8 +53,8 @@ namespace Szkolimy_za_darmo_api.Persistance
                  query = query.Where(v => queryObj.Categories.Contains(v.Category.Name));
             if (queryObj.Localizations.Length > 0)
                  query = query.Where(v => queryObj.Localizations.Contains(v.Localization.Id));
-            if (queryObj.Instructor.HasValue)
-                 query = query.Where(v => queryObj.Instructor == v.InstructorId);
+            if (queryObj.InstructorId.HasValue)
+                 query = query.Where(v => queryObj.InstructorId == v.InstructorId);
 
             int trainingsCount = query.ToList().Count();
             query = query.ApplyOrdering(queryObj, COLUMNS_MAP);

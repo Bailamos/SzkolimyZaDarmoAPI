@@ -6,16 +6,12 @@ namespace Szkolimy_za_darmo_api.Controllers.Resources.Query
 {
     public class TrainingQueryResource
     {
-        public int? Instructor { get; set; }
+        public int? InstructorId { get; set; }
         public string Localizations { get; set; }
         public string Categories { get; set; }
         public string SortBy { get; set; }
         public bool IsSortAscending { get; set; }
         public int Page { get; set; }
         public int PageSize { get; set; }
-
-        public TrainingQueryResource() {
-            // categories = new Collection<string>();
-        }
     }
 }
