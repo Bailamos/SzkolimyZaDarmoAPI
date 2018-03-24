@@ -7,7 +7,8 @@ namespace Szkolimy_za_darmo_api.Core.Interfaces
 {
     public interface IUserRepository
     {
-        Task<QueryResult<User>> GetAll(UserQuery queryObj);
+        Task<QueryResult<User>> GetAll(UserQuery queryObj, bool applyPaging = true);
+
         Task<User> GetOne(string id);
 
         void Add(User user);

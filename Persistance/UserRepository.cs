@@ -35,7 +35,7 @@ namespace Szkolimy_za_darmo_api.Persistance
             context.Users.Add(user);
         }
 
-        public async Task<QueryResult<User>> GetAll(UserQuery queryObj) {
+        public async Task<QueryResult<User>> GetAll(UserQuery queryObj, bool applyPaging = true) {
             var query = context.Users
                 .Include(user => user.Localization)
                 .Include(user => user.Entries)
@@ -52,7 +52,9 @@ namespace Szkolimy_za_darmo_api.Persistance
 
             int usersCount = query.ToList().Count();
             query = query.ApplyOrdering(queryObj, COLUMNS_MAP);
-            query = query.ApplyPaging(queryObj);
+            if (applyPaging)
+                query = query.ApplyPaging(queryObj);
+                
             var users = await query.ToListAsync();
 
             var queryResult = new QueryResult<User>();

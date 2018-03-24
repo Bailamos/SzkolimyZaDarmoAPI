@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -81,6 +82,16 @@ namespace Szkolimy_za_darmo_api.Controllers
             queryResult.items.ToList().ForEach(i => i.Entries = null);
             var response = mapper.Map<QueryResult<User>, QueryResult<UserResource>>(queryResult);
             return Ok(response);
+        }
+
+        [HttpGet("emails")]
+        public async Task<IActionResult> getUsersEmails(UserQueryResource queryResource)
+        {
+            UserQuery userQuery = mapper.Map<UserQueryResource, UserQuery>(queryResource);
+            QueryResult<User> queryResult = await userRepository.GetAll(userQuery, false);
+            Collection<string> emails = new Collection<string>();
+            queryResult.items.ToList().ForEach(i => emails.Add(i.Email));
+            return Ok(emails);
         }
 
         [HttpGet("{phoneNumber}")]
