@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -77,7 +78,7 @@ namespace Szkolimy_za_darmo_api.Controllers
         {
             UserQuery userQuery = mapper.Map<UserQueryResource, UserQuery>(queryResource);
             QueryResult<User> queryResult = await userRepository.GetAll(userQuery);
-
+            queryResult.items.ToList().ForEach(i => i.Entries = null);
             var response = mapper.Map<QueryResult<User>, QueryResult<UserResource>>(queryResult);
             return Ok(response);
         }
@@ -91,7 +92,7 @@ namespace Szkolimy_za_darmo_api.Controllers
         }
 
         [HttpPost("{phoneNumber}/logs")]
-        public async Task<IActionResult> createUserLog(string phoneNumber, [FromBody] SaveUserLogResource userLogResource)
+        public async Task<IActionResult> addUserLog(string phoneNumber, [FromBody] SaveUserLogResource userLogResource)
         {
             User user = await userRepository.GetOne(phoneNumber);
             if (user == null)
@@ -124,11 +125,15 @@ namespace Szkolimy_za_darmo_api.Controllers
 
         private async void updateUser(SaveUserResource userResource) {
             var user = await userRepository.GetOne(userResource.PhoneNumber);
+            user.LastUpdate = DateTime.Now;
+            user.UserLogs.Add(createUserLog("User zaktualizował dane", user.PhoneNumber));
             mapper.Map<SaveUserResource, User>(userResource, user);
         }
 
         private void createUser(SaveUserResource userResource) {
             var user = mapper.Map<SaveUserResource, User>(userResource);
+            user.LastUpdate = DateTime.Now;
+            user.UserLogs.Add(createUserLog("User został utworzony", user.PhoneNumber));
             userRepository.Add(user);
         }
 
@@ -145,6 +150,14 @@ namespace Szkolimy_za_darmo_api.Controllers
                 return null;
             }
             return training.Instructor.Email;
+        }
+
+        private UserLog createUserLog(string description, string userPhoneNumber) {
+            UserLog userLog = new UserLog();
+            userLog.Date = DateTime.Now;
+            userLog.UserPhoneNumber = userPhoneNumber;
+            userLog.Description = description;
+            return userLog;
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
@@ -24,6 +25,8 @@ namespace Szkolimy_za_darmo_api.Core.Models
         public string Email {get; set;}
 
         public int Age {get; set;}
+
+        public DateTime LastUpdate{get; set;}
 
         public int LocalizationId {get; set;}
 

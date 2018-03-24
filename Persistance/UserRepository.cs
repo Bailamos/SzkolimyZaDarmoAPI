@@ -20,6 +20,7 @@ namespace Szkolimy_za_darmo_api.Persistance
             ["PhoneNumber"] = v => v.PhoneNumber,
             ["Age"] = v => v.Age,
             ["Name"] = v => v.Name,
+            ["LastUpdate"] = v => v.LastUpdate
         };
 
         private readonly SzdDbContext context;
