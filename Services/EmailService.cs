@@ -42,7 +42,7 @@ namespace Szkolimy_za_darmo_api.Services
             client.DeliveryMethod = SmtpDeliveryMethod.Network;
             client.UseDefaultCredentials = false;
             client.Host = "smtp.gmail.com";
-            client.Credentials = new System.Net.NetworkCredential("szkolimyzadarmotest@gmail.com", "hejsokoly69");
+            client.Credentials = new System.Net.NetworkCredential("szkolimyzadarmotest@gmail.com", "admin1234qwer");
             return client;
         }
     }
