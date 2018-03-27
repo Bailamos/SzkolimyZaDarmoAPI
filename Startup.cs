@@ -34,6 +34,7 @@ namespace Szkolimy_za_darmo_api
             services.AddScoped<ITrainingRepository, TrainingRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IInstructorRepository, InstructorRepository>();
+            services.AddScoped<IResourceRepository, ResourceRepository>();
 
             services.AddScoped<IEmailService, EmailService>();
 

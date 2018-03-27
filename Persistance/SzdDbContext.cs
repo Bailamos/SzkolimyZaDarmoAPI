@@ -15,7 +15,10 @@ namespace Szkolimy_za_darmo_api.Persistance
         public DbSet<Instructor> Instructors {get; set;}
         public DbSet<Reminder> Reminders {get; set;}
         public DbSet<UserLog> UserLog {get; set;}
-
+        public DbSet<Voivodeship> Voivodeships {get; set;}
+        public DbSet<Sex> Sexes {get; set;}
+        public DbSet<Education> Educations {get; set;}
+        public DbSet<AreaOfResidence> AreasOfResidence {get; set;}
         public SzdDbContext(DbContextOptions<SzdDbContext> options) : base(options) {   
         }
 
