@@ -16,7 +16,7 @@ namespace Szkolimy_za_darmo_api.Persistance
          private readonly Dictionary<string, Expression<Func<User, object>>> COLUMNS_MAP 
             = new Dictionary<string, Expression<Func<User, object>>>()
         {
-            ["Localization"] = v => v.Localization.voivodeship,
+            ["Localization"] = v => v.County.CountyName,
             ["PhoneNumber"] = v => v.PhoneNumber,
             ["Name"] = v => v.Name,
             ["LastUpdate"] = v => v.LastUpdate
@@ -36,7 +36,7 @@ namespace Szkolimy_za_darmo_api.Persistance
 
         public async Task<QueryResult<User>> GetAll(UserQuery queryObj, bool applyPaging = true) {
             var query = context.Users
-                .Include(user => user.Localization)
+                .Include(user => user.County)
                 .Include(user => user.Entries)
                     .ThenInclude(entry => entry.Training)
                            .ThenInclude(training => training.Category)
@@ -44,7 +44,7 @@ namespace Szkolimy_za_darmo_api.Persistance
 
                 
             if (queryObj.Localization.HasValue)
-                 query = query.Where(v => queryObj.Localization == v.Localization.Id);
+                 query = query.Where(v => queryObj.Localization == v.County.Id);
             if (queryObj.Categories.Length > 0)
                 query = query.Where(
                     v => v.Entries.Any(c => queryObj.Categories.Contains(c.Training.CategoryName)));

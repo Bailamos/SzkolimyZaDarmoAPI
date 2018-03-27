@@ -20,8 +20,6 @@ namespace Szkolimy_za_darmo_api.Controllers.Resources.Save
         [Required]
         public DateTime BirthDay {get; set;}
 
-        public int LocalizationId {get; set;}
-
         [Required]
         public int? MarketStatusId {get; set;}
         
@@ -35,17 +33,14 @@ namespace Szkolimy_za_darmo_api.Controllers.Resources.Save
         public int? SexId {get; set;}
 
         [Required]
+        public int? CountyId {get; set;}
+
+        [Required]
         public bool? HasDisability {get; set;}
 
         public SaveEntryResource Entry {get; set;}
 
         public SaveNoteResource Note {get; set;}
-        
-    }
-
-    public class SaveNoteResource
-    {
-        [Required]
-        public string Description{get; set;}
+     
     }
 }

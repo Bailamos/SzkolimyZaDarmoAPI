@@ -10,9 +10,10 @@ using Szkolimy_za_darmo_api.Persistance;
 namespace Szkolimyzadarmoapi.Migrations
 {
     [DbContext(typeof(SzdDbContext))]
-    partial class SzdDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180327192805_Counties")]
+    partial class Counties
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -282,6 +283,8 @@ namespace Szkolimyzadarmoapi.Migrations
 
                     b.Property<DateTime>("LastUpdate");
 
+                    b.Property<int>("LocalizationId");
+
                     b.Property<int?>("MarketStatusId");
 
                     b.Property<string>("Name")
@@ -301,6 +304,8 @@ namespace Szkolimyzadarmoapi.Migrations
                     b.HasIndex("CountyId");
 
                     b.HasIndex("EducationId");
+
+                    b.HasIndex("LocalizationId");
 
                     b.HasIndex("MarketStatusId");
 
@@ -431,6 +436,11 @@ namespace Szkolimyzadarmoapi.Migrations
                     b.HasOne("Szkolimy_za_darmo_api.Core.Models.Education", "Education")
                         .WithMany()
                         .HasForeignKey("EducationId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Szkolimy_za_darmo_api.Core.Models.Localization", "Localization")
+                        .WithMany()
+                        .HasForeignKey("LocalizationId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Szkolimy_za_darmo_api.Core.Models.MarketStatus", "MarketStatus")

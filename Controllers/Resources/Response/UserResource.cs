@@ -15,7 +15,7 @@ namespace Szkolimy_za_darmo_api.Controllers.Resources.Return
 
         public string Email {get; set;}
 
-        public string LocalizationId {get; set;}
+        public string CountyId {get; set;}
 
         public bool HasDisability {get; set;}
 
