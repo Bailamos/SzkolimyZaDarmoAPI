@@ -15,7 +15,19 @@ namespace Szkolimy_za_darmo_api.Persistance
             this.context = context;
         }
 
-        public async Task<UserParameters> getUserParameters()
+        public async Task<TrainingParameters> GetTrainingParameters()
+        {
+            var categories = await this.context.Categories.ToListAsync();
+            var marketStatuses = await this.context.MarketStatuses.ToListAsync();
+
+            var trainingParameters = new TrainingParameters();
+            trainingParameters.Categories = categories;
+            trainingParameters.MarketStatuses = marketStatuses;
+
+            return trainingParameters;
+        }
+
+        public async Task<UserParameters> GetUserParameters()
         {
             var marketStatuses = await this.context.MarketStatuses.ToListAsync();
             var sexes = await this.context.Sexes.ToListAsync();
@@ -31,14 +43,14 @@ namespace Szkolimy_za_darmo_api.Persistance
             return userParameters;
         }
 
-        public async Task<Voivodeship> getVoivodeship(int id)
+        public async Task<Voivodeship> GetVoivodeship(int id)
         {
             return await this.context.Voivodeships
                 .Include(v => v.Counties)
                 .SingleOrDefaultAsync(v => v.Id == id);
         }
 
-        public async Task<IEnumerable<Voivodeship>> getVoivodeships()
+        public async Task<IEnumerable<Voivodeship>> GetVoivodeships()
         {
             return  await this.context.Voivodeships.ToListAsync();
         }

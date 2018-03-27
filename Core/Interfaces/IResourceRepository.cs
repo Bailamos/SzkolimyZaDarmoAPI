@@ -7,10 +7,12 @@ namespace Szkolimy_za_darmo_api.Core.Interfaces
 {
     public interface IResourceRepository
     {
-        Task<IEnumerable<Voivodeship>> getVoivodeships();
+        Task<IEnumerable<Voivodeship>> GetVoivodeships();
 
-        Task<Voivodeship> getVoivodeship(int id);
+        Task<Voivodeship> GetVoivodeship(int id);
 
-        Task<UserParameters> getUserParameters();
+        Task<UserParameters> GetUserParameters();
+
+        Task<TrainingParameters> GetTrainingParameters();
     }
 }

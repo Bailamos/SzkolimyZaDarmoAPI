@@ -24,7 +24,7 @@ namespace Szkolimy_za_darmo_api.Controllers
         [HttpGet("voivodeships")]
         public async Task<IActionResult> getLocalizations()
         {
-            var voivodeships = await resourceRepository.getVoivodeships();
+            var voivodeships = await resourceRepository.GetVoivodeships();
             var response = mapper.Map<IEnumerable<Voivodeship>, IEnumerable<VoivodeshipResource>>(voivodeships);
             return Ok(response);
         }
@@ -32,7 +32,7 @@ namespace Szkolimy_za_darmo_api.Controllers
         [HttpGet("voivodeships/{voivodeship_id}/counties")]
         public async Task<IActionResult> getVoivodeshipCounties(int voivodeship_id)
         {
-            var voivodeship = await resourceRepository.getVoivodeship(voivodeship_id);
+            var voivodeship = await resourceRepository.GetVoivodeship(voivodeship_id);
             if(voivodeship == null) {
                 return NotFound();
             }
@@ -43,9 +43,16 @@ namespace Szkolimy_za_darmo_api.Controllers
             return Ok(response);
         }
 
+        [HttpGet("trainings")]
+        public async Task<IActionResult> getTrainingParameter() {
+            var trainingParameters = await resourceRepository.GetTrainingParameters();
+
+            return Ok(trainingParameters);
+        }
+
         [HttpGet("users")]
         public async Task<IActionResult> getUserParameters() {
-            var userParameters = await resourceRepository.getUserParameters();
+            var userParameters = await resourceRepository.GetUserParameters();
 
             return Ok(userParameters);
         }
