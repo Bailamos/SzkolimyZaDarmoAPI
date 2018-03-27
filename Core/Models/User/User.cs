@@ -40,7 +40,7 @@ namespace Szkolimy_za_darmo_api.Core.Models
 
         public int AreaOfResidenceId {get; set;}
 
-        public AreaOfResidence areaOfResidence {get; set;}
+        public AreaOfResidence AreaOfResidence {get; set;}
 
         public int LocalizationId {get; set;}
 

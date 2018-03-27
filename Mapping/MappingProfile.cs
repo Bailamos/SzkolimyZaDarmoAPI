@@ -6,6 +6,7 @@ using Szkolimy_za_darmo_api.Controllers.Resources.Query;
 using Szkolimy_za_darmo_api.Controllers.Resources.Save;
 using Szkolimy_za_darmo_api.Core.Models;
 using Szkolimy_za_darmo_api.Core.Models.Query;
+using static Szkolimy_za_darmo_api.Controllers.Resources.Return.UserResource;
 
 namespace Szkolimy_za_darmo_api.Mapping
 {
@@ -86,7 +87,16 @@ namespace Szkolimy_za_darmo_api.Mapping
                         training.Tags.Add(f);
                 });                                            
             CreateMap<SaveUserResource, User>()
-                .ForMember(user => user.Entries, opt => opt.Ignore());
+                .ForMember(user => user.Entries, opt => opt.Ignore())
+                .ForMember(user => user.Notes, opt => opt.Ignore())
+                .AfterMap((userResource, user) => {
+                    if (userResource.Note != null)
+                        user.Notes.Add(
+                            new Note{
+                                Description = userResource.Note.Description,
+                                UserPhoneNumber = userResource.PhoneNumber
+                            });
+                });
 
             CreateMap<SaveEntryResource, Entry>()
                 .ForMember(entry => entry.TrainingId, opt => opt.MapFrom(saveEntryResource => saveEntryResource.TrainingId));
@@ -103,6 +113,7 @@ namespace Szkolimy_za_darmo_api.Mapping
                 .ForMember(log => log.Date, opt => opt.Ignore())
                 .ForMember(log => log.User, opt => opt.Ignore())
                 .ForMember(log => log.UserPhoneNumber, opt => opt.Ignore());
+
           }
 
           private void Generics() {
