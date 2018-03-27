@@ -7,6 +7,7 @@ using Szkolimy_za_darmo_api.Controllers.Resources.Save;
 using Szkolimy_za_darmo_api.Core.Models;
 using Szkolimy_za_darmo_api.Core.Models.Query;
 using static Szkolimy_za_darmo_api.Controllers.Resources.Return.UserResource;
+using System.Collections.Generic;
 
 namespace Szkolimy_za_darmo_api.Mapping
 {
@@ -73,19 +74,45 @@ namespace Szkolimy_za_darmo_api.Mapping
                 .ForMember(training => training.Id, opt => opt.Ignore())
                 .ForMember(training => training.LastUpdate, opt => opt.Ignore())
                 .ForMember(training => training.Tags, opt => opt.Ignore()) 
+                .ForMember(training => training.Counties, opt => opt.Ignore())
+                .ForMember(training => training.MarketStatuses, opt => opt.Ignore())
                 .AfterMap((saveTrainingResource, training) => {
                     var removedTags = training.Tags
                         .Where(trainingTag => !saveTrainingResource.Tags.Contains(trainingTag.TagName)).ToList();
                     foreach (var f in removedTags)
                         training.Tags.Remove(f);
-
                     var addedTags = saveTrainingResource.Tags
                         .Where(tag => !training.Tags.Any(trainingTag => trainingTag.TagName == tag))
                         .Select(tag => new TrainingTag { TagName = tag })
                         .ToList();   
                     foreach (var f in addedTags)
                         training.Tags.Add(f);
-                });                                            
+
+                    var removedCounties = training.Counties
+                        .Where(trainingCounty => !saveTrainingResource.Counties.Contains(trainingCounty.CountyId)).ToList();
+                    foreach(var f in removedCounties)
+                        training.Counties.Remove(f);
+                    var addedCounties = saveTrainingResource.Counties
+                        .Where(id => !training.Counties.Any(trainingCounty => trainingCounty.CountyId == id))
+                        .Select(id => new TrainingLocalization { CountyId = id })
+                        .ToList();  
+                    foreach (var f in addedCounties)
+                        training.Counties.Add(f);
+                    
+                    
+                    var removedMarketStatuses = training.MarketStatuses
+                        .Where(trainingMarketStatus => !saveTrainingResource.MarketStatuses.Contains(trainingMarketStatus.MarketStatusId)).ToList();
+                    foreach(var f in removedMarketStatuses)
+                        training.MarketStatuses.Remove(f);
+
+                    var addedMarketStatuses = saveTrainingResource.MarketStatuses
+                        .Where(id => !training.MarketStatuses.Any(trainingMarketStatus => trainingMarketStatus.MarketStatusId == id))
+                        .Select(id => new TrainingMarketStatus { MarketStatusId = id })
+                        .ToList();  
+                    foreach (var f in addedMarketStatuses)
+                        training.MarketStatuses.Add(f);
+                }); 
+                                                           
             CreateMap<SaveUserResource, User>()
                 .ForMember(user => user.Entries, opt => opt.Ignore())
                 .ForMember(user => user.Notes, opt => opt.Ignore())
@@ -119,5 +146,11 @@ namespace Szkolimy_za_darmo_api.Mapping
           private void Generics() {
             CreateMap(typeof(QueryResult<>), typeof(QueryResultResource<>));
           }
+        // private void updateCollection<Titem>(ICollection<Titem> collectionToUpdate, ICollection<Titem> newCollection) {
+        //    var removedItems = training.Tags
+        //                 .Where(trainingTag => !saveTrainingResource.Tags.Contains(trainingTag.TagName)).ToList();
+                    
+        // }
     }
+
 }

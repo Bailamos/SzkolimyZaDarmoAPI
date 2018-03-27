@@ -33,6 +33,18 @@ namespace Szkolimy_za_darmo_api.Persistance
                     Entry.TrainingId,
                     Entry.UserPhoneNumber
                 });
+
+            modelBuilder.Entity<TrainingLocalization>()
+                .HasKey(trainingLocalization => new {
+                    trainingLocalization.TrainingId,
+                    trainingLocalization.CountyId
+                });
+
+            modelBuilder.Entity<TrainingMarketStatus>()
+                .HasKey(trainingMarketStatus => new {
+                    trainingMarketStatus.TrainingId,
+                    trainingMarketStatus.MarketStatusId
+                });
             modelBuilder.Entity<MarketStatus>()
                 .HasIndex(MarketStatus => MarketStatus.Status).IsUnique();
         }
