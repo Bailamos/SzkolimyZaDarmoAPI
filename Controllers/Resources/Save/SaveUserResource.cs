@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Szkolimy_za_darmo_api.Controllers.Resources.Save
@@ -17,7 +18,7 @@ namespace Szkolimy_za_darmo_api.Controllers.Resources.Save
         public string Email {get; set;}
 
         [Required]
-        public int Age {get; set;}
+        public DateTime BirthDay {get; set;}
 
         public int LocalizationId {get; set;}
 

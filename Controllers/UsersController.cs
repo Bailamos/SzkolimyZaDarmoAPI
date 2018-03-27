@@ -45,32 +45,30 @@ namespace Szkolimy_za_darmo_api.Controllers
 
             if (await userRepository.CheckIfUserExists(userResource.PhoneNumber)) {
                 updateUser(userResource);
-                await unitOfWork.CompleteAsync();
             } else {
                 createUser(userResource);
             }
+            await unitOfWork.CompleteAsync();
 
-            bool isAlreadyRegistered = true;
-            Entry entry = createEntry(userResource);
-            if (!await userRepository.CheckIfEntryExists(entry.TrainingId, entry.UserPhoneNumber))
-            {
-                isAlreadyRegistered = false;
-                userRepository.AddEntry(entry);
-                await unitOfWork.CompleteAsync();
-
-                emailService.sendEmail(
-                    await getTrainingInstructorEmail(entry.TrainingId),
-                    "test", 
-                    "mail do szkoleniowca 1");
-                emailService.sendEmail(
-                    userResource.Email, 
-                    "test", 
-                    "mail do uczestnika 1");
+            if(userResource.Entry != null) {
+                Entry entry = createEntry(userResource);
+                if (!await userRepository.CheckIfEntryExists(entry.TrainingId, entry.UserPhoneNumber))
+                {
+                    userRepository.AddEntry(entry);
+                    emailService.sendEmail(
+                        await getTrainingInstructorEmail(entry.TrainingId),
+                        "test", 
+                        "mail do szkoleniowca 1");
+                    emailService.sendEmail(
+                        userResource.Email, 
+                        "test", 
+                        "mail do uczestnika 1");
+                    await unitOfWork.CompleteAsync();
+                }
             }
-
+            
             var user = await userRepository.GetOne(userResource.PhoneNumber);
             var result = mapper.Map<User, UserResource>(user);
-            result.IsAlreadyRegistered = isAlreadyRegistered;
             return Ok(result);
         }
 

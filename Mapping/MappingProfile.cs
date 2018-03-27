@@ -37,12 +37,7 @@ namespace Szkolimy_za_darmo_api.Mapping
 
             CreateMap<User, SaveUserResource>()
                 .ForMember(saveEntryResource => saveEntryResource.Entry, opt => opt.Ignore());
-
-            CreateMap<User, UserResource>()
-                .ForMember(
-                    userResource => userResource.IsAlreadyRegistered,
-                    opt => opt.Ignore());
-    
+  
         }
 
         private void ResourceToDomain() {

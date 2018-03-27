@@ -18,7 +18,6 @@ namespace Szkolimy_za_darmo_api.Persistance
         {
             ["Localization"] = v => v.Localization.voivodeship,
             ["PhoneNumber"] = v => v.PhoneNumber,
-            ["Age"] = v => v.Age,
             ["Name"] = v => v.Name,
             ["LastUpdate"] = v => v.LastUpdate
         };

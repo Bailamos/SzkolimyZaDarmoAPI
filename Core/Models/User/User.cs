@@ -24,7 +24,7 @@ namespace Szkolimy_za_darmo_api.Core.Models
         [MaxLength(100)]
         public string Email {get; set;}
 
-        public int Age {get; set;}
+        public DateTime Birthday {get; set;}
 
         public DateTime LastUpdate{get; set;}
 
@@ -39,7 +39,6 @@ namespace Szkolimy_za_darmo_api.Core.Models
         public ICollection<Entry> Entries {get; set;}
 
         public ICollection<UserLog> UserLogs {get; set;}
-
         public User(){
             this.Entries = new Collection<Entry>();
             this.UserLogs = new Collection<UserLog>();
