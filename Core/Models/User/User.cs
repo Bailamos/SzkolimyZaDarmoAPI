@@ -26,7 +26,21 @@ namespace Szkolimy_za_darmo_api.Core.Models
 
         public DateTime Birthday {get; set;}
 
+        public bool hasDisability {get; set;}
+        
+        public int SexId {get; set;}
+
+        public int EducationId {get; set;}
+
+        public Sex Sex {get; set;}
+
+        public Education Education {get; set;}
+
         public DateTime LastUpdate{get; set;}
+
+        public int AreaOfResidenceId {get; set;}
+
+        public AreaOfResidence areaOfResidence {get; set;}
 
         public int LocalizationId {get; set;}
 
@@ -39,9 +53,13 @@ namespace Szkolimy_za_darmo_api.Core.Models
         public ICollection<Entry> Entries {get; set;}
 
         public ICollection<UserLog> UserLogs {get; set;}
+
+        public ICollection<Note> Notes {get; set;}
+        
         public User(){
             this.Entries = new Collection<Entry>();
             this.UserLogs = new Collection<UserLog>();
+            this.Notes = new Collection<Note>();
         }
 
     }
