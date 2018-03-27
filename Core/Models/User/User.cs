@@ -42,13 +42,17 @@ namespace Szkolimy_za_darmo_api.Core.Models
 
         public AreaOfResidence AreaOfResidence {get; set;}
 
-        public int? MarketStatusId {get; set;}
-
         public County County {get; set;}
 
-        public int CountyId {get; set;}
+        public int? CountyId {get; set;}
+
+        public Voivodeship Voivodeship {get; set;}
+
+        public int VoivodeshipId {get; set;}
 
         public MarketStatus MarketStatus {get; set;}
+        
+        public int? MarketStatusId {get; set;}
 
         public ICollection<Entry> Entries {get; set;}
 

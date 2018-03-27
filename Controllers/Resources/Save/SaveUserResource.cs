@@ -32,8 +32,10 @@ namespace Szkolimy_za_darmo_api.Controllers.Resources.Save
         [Required]
         public int? SexId {get; set;}
 
-        [Required]
         public int? CountyId {get; set;}
+
+        [Required]
+        public int? VoivodeshipId {get; set;}
 
         [Required]
         public bool? HasDisability {get; set;}
