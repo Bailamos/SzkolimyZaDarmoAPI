@@ -76,6 +76,10 @@ namespace Szkolimy_za_darmo_api.Persistance
                     .Include(training => training.Tags)
                     .Include(training => training.Localization)
                     .Include(training => training.Instructor)
+                    .Include(training => training.Counties)
+                        .ThenInclude(trainingCounty => trainingCounty.County)
+                    .Include(training => training.MarketStatuses)
+                        .ThenInclude(marketStatuses => marketStatuses.MarketStatus)
                     .SingleOrDefaultAsync(training => training.Id == id);
             else
                 return await context.Trainings
