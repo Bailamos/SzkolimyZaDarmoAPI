@@ -19,6 +19,8 @@ namespace Szkolimy_za_darmo_api.Controllers.Resources.Return
 
         public bool HasDisability {get; set;}
 
+        public DateTime BirthDay {get; set;}
+
         public DateTime LastUpdate {get; set;}
 
         public MarketStatusResource MarketStatus {get; set;}
