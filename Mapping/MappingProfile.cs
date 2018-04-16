@@ -9,6 +9,7 @@ using Szkolimy_za_darmo_api.Core.Models.Query;
 using static Szkolimy_za_darmo_api.Controllers.Resources.Return.UserResource;
 using System.Collections.Generic;
 using Szkolimy_za_darmo_api.Controllers;
+using Szkolimy_za_darmo_api.Controllers.Resources.Response;
 
 namespace Szkolimy_za_darmo_api.Mapping
 {
@@ -27,6 +28,10 @@ namespace Szkolimy_za_darmo_api.Mapping
                     trainingResource => trainingResource.MarketStatus,
                     opt => opt.MapFrom(
                         training => new MarketStatusResource{Id = training.MarketStatus.Id, Status = training.MarketStatus.Status}))
+                .ForMember(
+                    trainingResource => trainingResource.Voivodeship,
+                    opt => opt.MapFrom(
+                        training => new VoivodeshipResource{Id = training.Voivodeship.Id, VoivodeshipName = training.Voivodeship.VoivodeshipName}))
                 .ForMember(
                     trainingResource => trainingResource.Tags,
                     opt => opt.MapFrom(
