@@ -51,6 +51,11 @@ namespace Szkolimy_za_darmo_api.Mapping
                     opt => opt.MapFrom(
                         training => training.Tags.Select(Type => new TagResource{Name = Type.TagName})));
 
+            CreateMap<Comment, CommentResource>()
+                .ForMember(
+                    commentResource => commentResource.InstructorEmail,
+                    opt => opt.MapFrom(comment => comment.Instructor.Email));
+
             CreateMap<User, SaveUserResource>()
                 .ForMember(saveEntryResource => saveEntryResource.Entry, opt => opt.Ignore());
   
@@ -77,8 +82,24 @@ namespace Szkolimy_za_darmo_api.Mapping
                 .ForMember(
                     userQuery => userQuery.Categories,
                     opt => opt.MapFrom(
-                        userQuery => userQuery.Categories
+                        res => res.Categories
                             .Split(',', StringSplitOptions.None)
+                            .ToArray()
+                    ))
+                .ForMember(
+                    userQuery => userQuery.Localizations,
+                    opt => opt.MapFrom(
+                        res => res.Localizations
+                            .Split(',', StringSplitOptions.None)
+                            .Select(int.Parse)
+                            .ToArray()
+                    ))
+                .ForMember(
+                    userQuery => userQuery.MarketStatuses,
+                    opt => opt.MapFrom(
+                        res => res.MarketStatuses
+                            .Split(',', StringSplitOptions.None)
+                            .Select(int.Parse)
                             .ToArray()
                     ));
 
@@ -126,6 +147,12 @@ namespace Szkolimy_za_darmo_api.Mapping
                     foreach (var f in addedMarketStatuses)
                         training.MarketStatuses.Add(f);
                 }); 
+
+             CreateMap<SaveCommentResource, Comment>()
+                .ForMember(c => c.Id, opt => opt.Ignore())
+                .ForMember(c => c.Instructor, opt => opt.Ignore())
+                .ForMember(c => c.User, opt => opt.Ignore());
+   
                                                            
             CreateMap<SaveUserResource, User>()
                 .ForMember(user => user.Entries, opt => opt.Ignore())

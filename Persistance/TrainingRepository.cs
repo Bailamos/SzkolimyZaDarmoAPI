@@ -46,13 +46,13 @@ namespace Szkolimy_za_darmo_api.Persistance
                 .Include(training => training.MarketStatus)
                 .Include(training => training.Category)
                 .Include(training => training.Tags)
-                .Include(training => training.Localization)
+                .Include(training => training.Voivodeship)
                 .AsQueryable();
 
             if (queryObj.Categories.Length > 0)
                  query = query.Where(v => queryObj.Categories.Contains(v.Category.Name));
             if (queryObj.Localizations.Length > 0)
-                 query = query.Where(v => queryObj.Localizations.Contains(v.Localization.Id));
+                 query = query.Where(v => queryObj.Localizations.Contains(v.Voivodeship.Id));
             if (queryObj.InstructorId.HasValue)
                  query = query.Where(v => queryObj.InstructorId == v.InstructorId);
 
@@ -74,7 +74,7 @@ namespace Szkolimy_za_darmo_api.Persistance
                     .Include(training => training.MarketStatus)
                     .Include(training => training.Category)
                     .Include(training => training.Tags)
-                    .Include(training => training.Localization)
+                    .Include(training => training.Voivodeship)
                     .Include(training => training.Instructor)
                     .Include(training => training.Counties)
                         .ThenInclude(trainingCounty => trainingCounty.County)

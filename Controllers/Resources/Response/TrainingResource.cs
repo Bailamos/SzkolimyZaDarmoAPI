@@ -14,6 +14,10 @@ namespace Szkolimy_za_darmo_api.Controllers.Resources.Return
 
         public string Description {get; set;}
 
+        public string ContactEmail {get; set;}
+
+        public string ContactPhoneNumber {get; set;}
+
         public DateTime LastUpdate {get; set;}
 
         public DateTime InsertDate {get; set;}
@@ -27,10 +31,10 @@ namespace Szkolimy_za_darmo_api.Controllers.Resources.Return
         public CategoryResource Category {get; set;}
 
         public MarketStatusResource MarketStatus {get; set;}
-
-        public LocalizationResource Localization {get; set;}
-        
+    
         public TrainingInstructorResource Instructor {get; set;}
+
+        public VoivodeshipResource Voivodeship {get; set;}
 
         public ICollection<MarketStatusResource> MarketStatuses {get; set;}
 
@@ -41,6 +45,11 @@ namespace Szkolimy_za_darmo_api.Controllers.Resources.Return
             this.Tags = new Collection<TagResource>();
             this.MarketStatuses = new Collection<MarketStatusResource>();
             this.Counties = new Collection<CountyResource>();
+        }
+
+        public class VoivodeshipResource {
+            public int Id {get; set;}  
+            public string VoivodeshipName {get; set;}
         }
     }
 }

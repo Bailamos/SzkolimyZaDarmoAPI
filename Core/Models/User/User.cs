@@ -24,7 +24,7 @@ namespace Szkolimy_za_darmo_api.Core.Models
         [MaxLength(100)]
         public string Email {get; set;}
 
-        public DateTime Birthday {get; set;}
+        public int BirthYear {get; set;}
 
         public bool hasDisability {get; set;}
         
@@ -52,18 +52,21 @@ namespace Szkolimy_za_darmo_api.Core.Models
 
         public MarketStatus MarketStatus {get; set;}
         
-        public int? MarketStatusId {get; set;}
+        public int MarketStatusId {get; set;}
 
         public ICollection<Entry> Entries {get; set;}
 
         public ICollection<UserLog> UserLogs {get; set;}
 
         public ICollection<Note> Notes {get; set;}
+
+        public ICollection<Comment> Comments {get; set;}
         
         public User(){
             this.Entries = new Collection<Entry>();
             this.UserLogs = new Collection<UserLog>();
             this.Notes = new Collection<Note>();
+            this.Comments = new Collection<Comment>();
         }
 
     }

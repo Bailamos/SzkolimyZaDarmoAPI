@@ -42,12 +42,21 @@ namespace Szkolimy_za_darmo_api.Persistance
                            .ThenInclude(training => training.Category)
                 .AsQueryable();
 
-                
-            if (queryObj.Localization.HasValue)
-                 query = query.Where(v => queryObj.Localization == v.County.Id);
+            if (queryObj.AgeTo.HasValue)
+                query = query.Where(v => queryObj.AgeTo > DateTime.Now.Year - v.BirthYear);             
+            if (queryObj.AgeFrom.HasValue)
+                query = query.Where(v => queryObj.AgeFrom < DateTime.Now.Year - v.BirthYear);  
+            if (queryObj.Localizations.Length > 0)
+                query = query.Where(
+                    v => queryObj.Localizations.Contains(v.VoivodeshipId));              
+            if (queryObj.MarketStatuses.Length > 0)
+                query = query.Where(
+                    v => queryObj.MarketStatuses.Contains(v.MarketStatusId));
             if (queryObj.Categories.Length > 0)
                 query = query.Where(
                     v => v.Entries.Any(c => queryObj.Categories.Contains(c.Training.CategoryName)));
+
+
 
             int usersCount = query.ToList().Count();
             query = query.ApplyOrdering(queryObj, COLUMNS_MAP);
@@ -79,6 +88,8 @@ namespace Szkolimy_za_darmo_api.Persistance
                     .ThenInclude(entry => entry.Training)
                       .ThenInclude(training => training.MarketStatus)
                 .Include(user => user.UserLogs)
+                .Include(user => user.Comments)
+                    .ThenInclude(c => c.Instructor)
                 .Include(user => user.AreaOfResidence)
                 .Include(user => user.Education)
                 .Include(user => user.MarketStatus)

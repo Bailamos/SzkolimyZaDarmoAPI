@@ -18,7 +18,7 @@ namespace Szkolimy_za_darmo_api.Controllers.Resources.Save
         public string Email {get; set;}
 
         [Required]
-        public DateTime BirthDay {get; set;}
+        public int? BirthYear {get; set;}
 
         [Required]
         public int? MarketStatusId {get; set;}

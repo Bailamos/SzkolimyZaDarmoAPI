@@ -10,9 +10,10 @@ using Szkolimy_za_darmo_api.Persistance;
 namespace Szkolimyzadarmoapi.Migrations
 {
     [DbContext(typeof(SzdDbContext))]
-    partial class SzdDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180422153149_training contact phone and email")]
+    partial class trainingcontactphoneandemail
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,29 +41,6 @@ namespace Szkolimyzadarmoapi.Migrations
                     b.HasKey("Name");
 
                     b.ToTable("categories");
-                });
-
-            modelBuilder.Entity("Szkolimy_za_darmo_api.Core.Models.Comment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("Date");
-
-                    b.Property<string>("Description")
-                        .IsRequired();
-
-                    b.Property<int>("InstructorId");
-
-                    b.Property<string>("UserPhoneNumber");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("InstructorId");
-
-                    b.HasIndex("UserPhoneNumber");
-
-                    b.ToTable("comments");
                 });
 
             modelBuilder.Entity("Szkolimy_za_darmo_api.Core.Models.County", b =>
@@ -343,7 +321,7 @@ namespace Szkolimyzadarmoapi.Migrations
 
                     b.Property<DateTime>("LastUpdate");
 
-                    b.Property<int>("MarketStatusId");
+                    b.Property<int?>("MarketStatusId");
 
                     b.Property<string>("Name")
                         .IsRequired();
@@ -406,18 +384,6 @@ namespace Szkolimyzadarmoapi.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("voivodeships");
-                });
-
-            modelBuilder.Entity("Szkolimy_za_darmo_api.Core.Models.Comment", b =>
-                {
-                    b.HasOne("Szkolimy_za_darmo_api.Core.Models.Instructor", "Instructor")
-                        .WithMany()
-                        .HasForeignKey("InstructorId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Szkolimy_za_darmo_api.Core.Models.User", "User")
-                        .WithMany("Comments")
-                        .HasForeignKey("UserPhoneNumber");
                 });
 
             modelBuilder.Entity("Szkolimy_za_darmo_api.Core.Models.County", b =>
@@ -542,8 +508,7 @@ namespace Szkolimyzadarmoapi.Migrations
 
                     b.HasOne("Szkolimy_za_darmo_api.Core.Models.MarketStatus", "MarketStatus")
                         .WithMany()
-                        .HasForeignKey("MarketStatusId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("MarketStatusId");
 
                     b.HasOne("Szkolimy_za_darmo_api.Core.Models.Sex", "Sex")
                         .WithMany()

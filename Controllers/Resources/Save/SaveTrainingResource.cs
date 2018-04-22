@@ -13,6 +13,17 @@ namespace Szkolimy_za_darmo_api.Controllers.Resources.Save
         [Required]
         public string Description {get; set;}
 
+        [Required]
+        [RegularExpression(
+            "^((([!#$%&'*+\\-/=?^_`{|}~\\w])|([!#$%&'*+\\-/=?^_`{|}~\\w]"
+             + "[!#$%&'*+\\-/=?^_`{|}~\\.\\w]{0,}[!#$%&'*+\\-/=?^_`{|}~\\w]))"
+             + "[@]\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*)$")]
+        public string ContactEmail {get; set;}
+
+        [Required]
+        [RegularExpression("^(\\d{7}|\\d{9})$")]
+        public string ContactPhoneNumber {get; set;}
+
         public Nullable<DateTime> RegisterSince {get; set;}
 
         public Nullable<DateTime> RegisterTo {get; set;}

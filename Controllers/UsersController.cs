@@ -55,14 +55,18 @@ namespace Szkolimy_za_darmo_api.Controllers
                 if (!await userRepository.CheckIfEntryExists(entry.TrainingId, entry.UserPhoneNumber))
                 {
                     userRepository.AddEntry(entry);
-                    emailService.sendEmail(
-                        await getTrainingInstructorEmail(entry.TrainingId),
-                        "test", 
-                        "mail do szkoleniowca 1");
-                    emailService.sendEmail(
-                        userResource.Email, 
-                        "test", 
-                        "mail do uczestnika 1");
+                    try {
+                        emailService.sendEmail(
+                            await getTrainingInstructorEmail(entry.TrainingId),
+                            "test", 
+                            "mail do szkoleniowca 1");
+                        emailService.sendEmail(
+                            userResource.Email, 
+                            "test", 
+                            "mail do uczestnika 1");
+                    } catch {
+                        //TODO co jak sie nie uda
+                    }
                     await unitOfWork.CompleteAsync();
                 }
             }
@@ -129,6 +133,35 @@ namespace Szkolimy_za_darmo_api.Controllers
             }
 
             var response = mapper.Map<ICollection<UserLog>, ICollection<UserLogResource>>(userLogs);
+            return Ok(response);
+        }
+
+        [HttpPost("{phoneNumber}/comments")]
+        public async Task<IActionResult> addUserComment(string phoneNumber, [FromBody] SaveCommentResource commentResource)
+        {
+            var user = await userRepository.GetOne(phoneNumber);
+            if (user == null) {
+                return NotFound();
+            }
+
+            var comment = mapper.Map<SaveCommentResource, Comment>(commentResource);
+            comment.Date = DateTime.Now;
+            user.Comments.Add(comment);
+            await unitOfWork.CompleteAsync();
+
+            return Ok();
+        }
+
+        [HttpGet("{phoneNumber}/comments")]
+        public async Task<IActionResult> getUserComment(string phoneNumber)
+        {
+            var user = await userRepository.GetOne(phoneNumber);
+            if (user == null) {
+                return NotFound();
+            }   
+
+            var comments = user.Comments;
+            var response = mapper.Map<IEnumerable<Comment>, IEnumerable<CommentResource>>(comments);
             return Ok(response);
         }
 

@@ -19,10 +19,12 @@ namespace Szkolimy_za_darmo_api.Persistance
         {
             var categories = await this.context.Categories.ToListAsync();
             var marketStatuses = await this.context.MarketStatuses.ToListAsync();
+            var voivodeships = await this.context.Voivodeships.ToListAsync();
 
             var trainingParameters = new TrainingParameters();
             trainingParameters.Categories = categories;
             trainingParameters.MarketStatuses = marketStatuses;
+            trainingParameters.Voivodeships = voivodeships;
 
             return trainingParameters;
         }
