@@ -2,11 +2,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Szkolimy_za_darmo_api.Core.Interfaces;
 
 namespace Szkolimy_za_darmo_api.Core.Models
 {
     [Table("marketStatuses")]
-    public class MarketStatus
+    public class MarketStatus : ICsvObject
     {
         public int Id {get; set;}
 
@@ -17,6 +18,11 @@ namespace Szkolimy_za_darmo_api.Core.Models
 
         public MarketStatus() {
             this.trainings = new Collection<Training>();
+        }
+
+        public string toCsv()
+        {
+            return this.Status;
         }
     }
 }

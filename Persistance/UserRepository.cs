@@ -37,6 +37,12 @@ namespace Szkolimy_za_darmo_api.Persistance
         public async Task<QueryResult<User>> GetAll(UserQuery queryObj, bool applyPaging = true) {
             var query = context.Users
                 .Include(user => user.County)
+                .Include(user => user.Sex)
+                .Include(user => user.Education)
+                .Include(user => user.AreaOfResidence)
+                .Include(user => user.County)
+                .Include(user => user.MarketStatus)
+                .Include(user => user.Voivodeship)
                 .Include(user => user.Entries)
                     .ThenInclude(entry => entry.Training)
                            .ThenInclude(training => training.Category)
@@ -91,6 +97,8 @@ namespace Szkolimy_za_darmo_api.Persistance
                 .Include(user => user.Comments)
                     .ThenInclude(c => c.Instructor)
                 .Include(user => user.AreaOfResidence)
+                .Include(user => user.County)
+                .Include(user => user.Voivodeship)
                 .Include(user => user.Education)
                 .Include(user => user.MarketStatus)
                 .Include(user => user.Sex)

@@ -1,10 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Szkolimy_za_darmo_api.Core.Interfaces;
 
 namespace Szkolimy_za_darmo_api.Core.Models
 {
     [Table("counties")]
-    public class County
+    public class County : ICsvObject
     {
         public int Id {get; set;}
 
@@ -15,6 +16,11 @@ namespace Szkolimy_za_darmo_api.Core.Models
         public int VoivodeshipId {get; set;}
 
         public Voivodeship Voivodeship {get; set;}
+
+        public string toCsv()
+        {
+            return this.CountyName;
+        }
     }
 
 }

@@ -31,6 +31,10 @@ namespace Szkolimy_za_darmo_api.Controllers.Resources.Return
 
         public SexResource Sex {get; set;}
 
+        public VoivodeshipResource Voivodeship {get; set;}
+
+        public CountyResource County {get; set;}
+
         public ICollection<EntryResource> Entries {get;set;}
         
         public UserResource() {

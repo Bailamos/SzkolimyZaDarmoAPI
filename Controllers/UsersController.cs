@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -22,6 +23,7 @@ namespace Szkolimy_za_darmo_api.Controllers
         private readonly IUnitOfWork unitOfWork;
         private readonly IUserRepository userRepository;
         private readonly IEmailService emailService;
+        private readonly ICsvService csvService;
         private readonly ITrainingRepository trainingRepository;
 
         public UsersController(
@@ -29,10 +31,12 @@ namespace Szkolimy_za_darmo_api.Controllers
             IUnitOfWork unitOfWork, 
             ITrainingRepository trainingRepository, 
             IUserRepository userRepository, 
-            IEmailService emailService)
+            IEmailService emailService,
+            ICsvService csvService)
         {
             this.trainingRepository = trainingRepository;
             this.emailService = emailService;
+            this.csvService = csvService;
             this.userRepository = userRepository;
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
@@ -76,6 +80,22 @@ namespace Szkolimy_za_darmo_api.Controllers
             return Ok(result);
         }
 
+        [HttpPut("{phoneNumber}")]
+        public async Task<IActionResult> updateUserByInstructor(string phoneNumber, [FromBody] SaveUserResource userResource) {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            var userOld = await userRepository.GetOne(phoneNumber);
+            if (userOld == null) {
+                return NotFound();
+            }
+            updateUser(userResource);
+            await unitOfWork.CompleteAsync();
+
+            var userNew = await userRepository.GetOne(phoneNumber);
+            var response = mapper.Map<User, UserResource>(userNew);
+            return Ok(response);
+        }
+
         [HttpGet]
         public async Task<IActionResult> getUsers(UserQueryResource queryResource)
         {
@@ -84,6 +104,32 @@ namespace Szkolimy_za_darmo_api.Controllers
             queryResult.items.ToList().ForEach(i => i.Entries = null);
             var response = mapper.Map<QueryResult<User>, QueryResult<UserResource>>(queryResult);
             return Ok(response);
+        }
+
+        [HttpGet("csv")]
+        public async Task<IActionResult> getCsv()
+        {
+            UserQuery userQuery = new UserQuery();
+            userQuery.Page = 0;
+            userQuery.PageSize = 1000;
+            userQuery.SortBy = "LastUpdate";
+            userQuery.IsSortAscending = false;
+            userQuery.Localizations = new int[0];
+            userQuery.Categories = new string[0];
+            userQuery.MarketStatuses = new int[0];
+
+            QueryResult<User> queryResult = await userRepository.GetAll(userQuery);
+            var items = queryResult.items;
+            var csv = new Collection<String>();
+            int i = 0;
+            foreach(object item in items) {
+                if (i == 0){
+                    csv.Add(csvService.ObjectToHeader(item));
+                    i++;
+                }
+                csv.Add(csvService.ObjectToCsvData(item));
+            }
+            return Ok(csv);
         }
 
         [HttpGet("emails")]
@@ -127,10 +173,6 @@ namespace Szkolimy_za_darmo_api.Controllers
         public async Task<IActionResult> getUserLog(string phoneNumber)
         {
             var userLogs = await userRepository.GetUserLogs(phoneNumber);
-            if (userLogs.Count == 0)
-            {
-                return NotFound();
-            }
 
             var response = mapper.Map<ICollection<UserLog>, ICollection<UserLogResource>>(userLogs);
             return Ok(response);
@@ -168,7 +210,6 @@ namespace Szkolimy_za_darmo_api.Controllers
         private async void updateUser(SaveUserResource userResource) {
             var user = await userRepository.GetOne(userResource.PhoneNumber);
             user.LastUpdate = DateTime.Now;
-            user.UserLogs.Add(createUserLog("User zaktualizował dane", user.PhoneNumber));
             mapper.Map<SaveUserResource, User>(userResource, user);
         }
 
@@ -200,6 +241,24 @@ namespace Szkolimy_za_darmo_api.Controllers
             userLog.UserPhoneNumber = userPhoneNumber;
             userLog.Description = description;
             return userLog;
+        }
+
+        private void createLogs(User userOld, User userNew) {
+            List<PropertyInfo> differences = new List<PropertyInfo>();
+            foreach (PropertyInfo property in userOld.GetType().GetProperties())
+            {
+                object value1 = property.GetValue(userOld, null);
+                object value2 = property.GetValue(userNew, null);
+                if (!value1.Equals(value2))
+                {
+                    UserLog userLog = new UserLog();
+                    userLog.Date = DateTime.Now;
+                    userLog.Description = value1 + " na " + value2;
+                    userNew.UserLogs.Add(userLog);
+                    
+                }
+            }
+        
         }
     }
 }
