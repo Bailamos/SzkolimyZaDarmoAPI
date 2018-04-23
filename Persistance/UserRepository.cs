@@ -123,5 +123,10 @@ namespace Szkolimy_za_darmo_api.Persistance
                 .OrderByDescending(log => log.Date)
                 .ToListAsync();
         }
+
+        public void AddLog(UserLog log)
+        {
+            context.UserLog.Add(log);
+        }
     }
 }

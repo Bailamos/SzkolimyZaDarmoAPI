@@ -3,15 +3,17 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
+using MySql.Data.EntityFrameworkCore.Storage.Internal;
 using System;
 using Szkolimy_za_darmo_api.Persistance;
 
 namespace Szkolimyzadarmoapi.Migrations
 {
     [DbContext(typeof(SzdDbContext))]
-    partial class SzdDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180423075348_entry participated")]
+    partial class entryparticipated
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

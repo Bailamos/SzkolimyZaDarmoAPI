@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -56,6 +57,7 @@ namespace Szkolimy_za_darmo_api.Controllers
 
             if(userResource.Entry != null) {
                 Entry entry = createEntry(userResource);
+                entry.DidParticipated = true;
                 if (!await userRepository.CheckIfEntryExists(entry.TrainingId, entry.UserPhoneNumber))
                 {
                     userRepository.AddEntry(entry);
@@ -84,14 +86,19 @@ namespace Szkolimy_za_darmo_api.Controllers
         public async Task<IActionResult> updateUserByInstructor(string phoneNumber, [FromBody] SaveUserResource userResource) {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var userOld = await userRepository.GetOne(phoneNumber);
-            if (userOld == null) {
+            var user = await userRepository.GetOne(phoneNumber);
+            if (user == null) {
                 return NotFound();
             }
-            updateUser(userResource);
+            user.LastUpdate = DateTime.Now;
+        
+            mapper.Map<SaveUserResource, User>(userResource, user);
             await unitOfWork.CompleteAsync();
 
             var userNew = await userRepository.GetOne(phoneNumber);
+            //createLogs(user, userNew);
+            await unitOfWork.CompleteAsync();
+
             var response = mapper.Map<User, UserResource>(userNew);
             return Ok(response);
         }
@@ -244,21 +251,22 @@ namespace Szkolimy_za_darmo_api.Controllers
         }
 
         private void createLogs(User userOld, User userNew) {
-            List<PropertyInfo> differences = new List<PropertyInfo>();
-            foreach (PropertyInfo property in userOld.GetType().GetProperties())
-            {
-                object value1 = property.GetValue(userOld, null);
-                object value2 = property.GetValue(userNew, null);
-                if (!value1.Equals(value2))
-                {
-                    UserLog userLog = new UserLog();
-                    userLog.Date = DateTime.Now;
-                    userLog.Description = value1 + " na " + value2;
-                    userNew.UserLogs.Add(userLog);
-                    
-                }
+            StringBuilder sb = new StringBuilder();
+            if (userOld.AreaOfResidenceId != userNew.AreaOfResidenceId) {
+                sb.Append(
+                    "Rejon zamieszkania z zmieniony z " +
+                    userOld.AreaOfResidence.AreaType + " na " +
+                    userNew.AreaOfResidence.AreaType);
             }
-        
+
+            if(sb.ToString() != "") {
+                UserLog userLog = new UserLog();
+                userLog.Date = DateTime.Now;
+                userLog.Description = sb.ToString();
+                userLog.UserPhoneNumber = userNew.PhoneNumber;
+
+                this.userRepository.AddLog(userLog);
+            }
         }
     }
 }
