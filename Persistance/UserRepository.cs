@@ -102,6 +102,7 @@ namespace Szkolimy_za_darmo_api.Persistance
                 .Include(user => user.Education)
                 .Include(user => user.MarketStatus)
                 .Include(user => user.Sex)
+                .Include(user => user.Notes)
                 .SingleOrDefaultAsync(user => user.PhoneNumber == phoneNumber);
         }
 

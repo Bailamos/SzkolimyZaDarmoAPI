@@ -153,7 +153,7 @@ namespace Szkolimy_za_darmo_api.Controllers
         public async Task<IActionResult> getUser(string phoneNumber)
         {
             User user = await userRepository.GetOne(phoneNumber);
-            var response = mapper.Map<User, UserResource>(user);
+            var response = mapper.Map<User, UserGetOneResource>(user);
             return Ok(response);
         }
 
@@ -214,6 +214,23 @@ namespace Szkolimy_za_darmo_api.Controllers
             return Ok(response);
         }
 
+        [HttpPatch("{phoneNumber}/{training_id}/participate")] 
+        public async Task<IActionResult> changeParticipate(string phoneNumber, int training_id)
+        {   
+            User user = await userRepository.GetOne(phoneNumber);
+            if (user == null) {
+                return NotFound();
+            }
+            var entry = user.Entries.Where(e => e.TrainingId == training_id).FirstOrDefault();
+            if (entry != null) {
+               entry.DidParticipated = !entry.DidParticipated; 
+            }
+            
+            await unitOfWork.CompleteAsync();
+
+            return Ok();
+        }
+
         private async void updateUser(SaveUserResource userResource) {
             var user = await userRepository.GetOne(userResource.PhoneNumber);
             user.LastUpdate = DateTime.Now;
@@ -239,7 +256,7 @@ namespace Szkolimy_za_darmo_api.Controllers
             if (training == null) {
                 return null;
             }
-            return training.Instructor.Email;
+            return training.ContactEmail;
         }
 
         private UserLog createUserLog(string description, string userPhoneNumber) {

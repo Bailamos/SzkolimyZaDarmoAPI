@@ -388,3 +388,46 @@ ALTER TABLE `trainings` ADD CONSTRAINT `FK_trainings_voivodeships_VoivodeshipId`
 INSERT INTO `__EFMigrationsHistory` (`MigrationId`, `ProductVersion`)
 VALUES ('20180327233652_Training multiple counties and market statuses', '2.0.1-rtm-125');
 
+ALTER TABLE `users` DROP COLUMN `Birthday`;
+
+ALTER TABLE `users` ADD `BirthYear` int NOT NULL DEFAULT 0;
+
+INSERT INTO `__EFMigrationsHistory` (`MigrationId`, `ProductVersion`)
+VALUES ('20180419204135_User birthYear', '2.0.1-rtm-125');
+
+ALTER TABLE `trainings` ADD `ContactEmail` varchar(255) NOT NULL DEFAULT '';
+
+ALTER TABLE `trainings` ADD `ContactPhoneNumber` varchar(255) NOT NULL DEFAULT '';
+
+INSERT INTO `__EFMigrationsHistory` (`MigrationId`, `ProductVersion`)
+VALUES ('20180422153149_training contact phone and email', '2.0.1-rtm-125');
+
+ALTER TABLE `users` DROP foreign key `FK_users_marketStatuses_MarketStatusId`
+
+ALTER TABLE users MODIFY `MarketStatusId` int NOT NULL;
+
+CREATE TABLE `comments` (
+    `Id` int NOT NULL AUTO_INCREMENT,
+    `Date` datetime NOT NULL,
+    `Description` text NOT NULL,
+    `InstructorId` int NOT NULL,
+    `UserPhoneNumber` varchar(16) NULL,
+    PRIMARY KEY (`Id`),
+    CONSTRAINT `FK_comments_instructors_InstructorId` FOREIGN KEY (`InstructorId`) REFERENCES `instructors` (`Id`) ON DELETE CASCADE,
+    CONSTRAINT `FK_comments_users_UserPhoneNumber` FOREIGN KEY (`UserPhoneNumber`) REFERENCES `users` (`PhoneNumber`) ON DELETE RESTRICT
+);
+
+CREATE INDEX `IX_comments_InstructorId` ON comments (`InstructorId`);
+
+CREATE INDEX `IX_comments_UserPhoneNumber` ON comments (`UserPhoneNumber`);
+
+ALTER TABLE `users` ADD CONSTRAINT `FK_users_marketStatuses_MarketStatusId` FOREIGN KEY (`MarketStatusId`) REFERENCES `marketStatuses` (`Id`) ON DELETE CASCADE;
+
+INSERT INTO `__EFMigrationsHistory` (`MigrationId`, `ProductVersion`)
+VALUES ('20180422200121_User comments', '2.0.1-rtm-125');
+
+ALTER TABLE `entries` ADD `DidParticipated` bit NOT NULL DEFAULT False;
+
+INSERT INTO `__EFMigrationsHistory` (`MigrationId`, `ProductVersion`)
+VALUES ('20180423075348_entry participated', '2.0.1-rtm-125');
+

@@ -34,12 +34,17 @@ namespace Szkolimy_za_darmo_api.Services
                     }
                 } else if (pi[index].PropertyType.GetInterface(nameof(ICsvObject)) != null) {
 
-                    var type = pi[index].PropertyType;
-                    var method = type.GetMethod("toCsv");
-      
-                    var csv = method.Invoke(pi[index].GetValue(obj, null) , new object[] {});
+                    if  (pi[index].GetValue(obj, null) == null) {
+                        sb.Append("Brak");
+                    } else {
+                        var type = pi[index].PropertyType;
+                        var method = type.GetMethod("toCsv");
 
-                    sb.Append(csv);     
+                        var csv = method.Invoke(pi[index].GetValue(obj, null) , new object[] {});
+
+                        sb.Append(csv);     
+                    }
+
                     if (index < pi.Length - 1)
                     {
                         sb.Append(",");
