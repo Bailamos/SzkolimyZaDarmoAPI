@@ -21,7 +21,7 @@ namespace Szkolimy_za_darmo_api.Core.Interfaces
 
         Task<ICollection<UserLog>> GetUserLogs(string userId);
 
-        void AddLog(UserLog log);
+        void CreateLogs(string userPhoneNumber, string whoChanged);
         
     }
 }

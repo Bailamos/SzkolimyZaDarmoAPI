@@ -166,6 +166,18 @@ namespace Szkolimy_za_darmo_api.Mapping
                             });
                 });
 
+            CreateMap<EditUserResource, User>()
+                .ForMember(user => user.Entries, opt => opt.Ignore())
+                .ForMember(user => user.Notes, opt => opt.Ignore())
+                .AfterMap((userResource, user) => {
+                    if (userResource.Note != null)
+                        user.Notes.Add(
+                            new Note{
+                                Description = userResource.Note.Description,
+                                UserPhoneNumber = userResource.PhoneNumber
+                            });
+                });
+
             CreateMap<SaveEntryResource, Entry>()
                 .ForMember(entry => entry.TrainingId, opt => opt.MapFrom(saveEntryResource => saveEntryResource.TrainingId));
                 
@@ -178,9 +190,10 @@ namespace Szkolimy_za_darmo_api.Mapping
 
             CreateMap<SaveUserLogResource, UserLog>()
                 .ForMember(log => log.Id, opt => opt.Ignore())
-                .ForMember(log => log.Date, opt => opt.Ignore())
+                .ForMember(log => log.ChangeDate, opt => opt.Ignore())
                 .ForMember(log => log.User, opt => opt.Ignore())
                 .ForMember(log => log.UserPhoneNumber, opt => opt.Ignore());
+
 
           }
 

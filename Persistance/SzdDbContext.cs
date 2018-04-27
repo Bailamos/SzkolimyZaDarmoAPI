@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Szkolimy_za_darmo_api.Core.Models;
 
@@ -16,6 +18,7 @@ namespace Szkolimy_za_darmo_api.Persistance
         public DbSet<Reminder> Reminders {get; set;}
         public DbSet<UserLog> UserLog {get; set;}
         public DbSet<Voivodeship> Voivodeships {get; set;}
+        public DbSet<County> Counties {get; set;}
         public DbSet<Sex> Sexes {get; set;}
         public DbSet<Education> Educations {get; set;}
         public DbSet<AreaOfResidence> AreasOfResidence {get; set;}

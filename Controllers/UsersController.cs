@@ -50,6 +50,7 @@ namespace Szkolimy_za_darmo_api.Controllers
 
             if (await userRepository.CheckIfUserExists(userResource.PhoneNumber)) {
                 updateUser(userResource);
+                userRepository.CreateLogs(userResource.PhoneNumber, "użytkownik");
             } else {
                 createUser(userResource);
             }
@@ -83,23 +84,24 @@ namespace Szkolimy_za_darmo_api.Controllers
         }
 
         [HttpPut("{phoneNumber}")]
-        public async Task<IActionResult> updateUserByInstructor(string phoneNumber, [FromBody] SaveUserResource userResource) {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+        public async Task<IActionResult> updateUserByInstructor(
+            string phoneNumber, 
+            [FromBody] EditUserResource userResource) {
 
+            if (!ModelState.IsValid) return BadRequest(ModelState);
             var user = await userRepository.GetOne(phoneNumber);
             if (user == null) {
                 return NotFound();
             }
-            user.LastUpdate = DateTime.Now;
-        
-            mapper.Map<SaveUserResource, User>(userResource, user);
+            
+            user.LastUpdate = DateTime.Now;       
+            mapper.Map<EditUserResource, User>(userResource, user);
+            userRepository.CreateLogs(phoneNumber, userResource.ByWho);
             await unitOfWork.CompleteAsync();
 
-            var userNew = await userRepository.GetOne(phoneNumber);
-            //createLogs(user, userNew);
-            await unitOfWork.CompleteAsync();
+            user = await userRepository.GetOne(phoneNumber);
+            var response = mapper.Map<User, UserResource>(user);
 
-            var response = mapper.Map<User, UserResource>(userNew);
             return Ok(response);
         }
 
@@ -154,25 +156,6 @@ namespace Szkolimy_za_darmo_api.Controllers
         {
             User user = await userRepository.GetOne(phoneNumber);
             var response = mapper.Map<User, UserGetOneResource>(user);
-            return Ok(response);
-        }
-
-        [HttpPost("{phoneNumber}/logs")]
-        public async Task<IActionResult> addUserLog(string phoneNumber, [FromBody] SaveUserLogResource userLogResource)
-        {
-            User user = await userRepository.GetOne(phoneNumber);
-            if (user == null)
-            {
-                return NotFound();
-            }
-            UserLog userLog = mapper.Map<SaveUserLogResource, UserLog>(userLogResource);
-            userLog.Date = DateTime.Now;
-            userLog.UserPhoneNumber = phoneNumber;
-            user.UserLogs.Add(userLog);
-            await unitOfWork.CompleteAsync();
-
-            var userLogs = await userRepository.GetUserLogs(phoneNumber);
-            var response = mapper.Map<ICollection<UserLog>, ICollection<UserLogResource>>(userLogs);
             return Ok(response);
         }
 
@@ -240,7 +223,6 @@ namespace Szkolimy_za_darmo_api.Controllers
         private void createUser(SaveUserResource userResource) {
             var user = mapper.Map<SaveUserResource, User>(userResource);
             user.LastUpdate = DateTime.Now;
-            user.UserLogs.Add(createUserLog("User został utworzony", user.PhoneNumber));
             userRepository.Add(user);
         }
 
@@ -259,31 +241,6 @@ namespace Szkolimy_za_darmo_api.Controllers
             return training.ContactEmail;
         }
 
-        private UserLog createUserLog(string description, string userPhoneNumber) {
-            UserLog userLog = new UserLog();
-            userLog.Date = DateTime.Now;
-            userLog.UserPhoneNumber = userPhoneNumber;
-            userLog.Description = description;
-            return userLog;
-        }
 
-        private void createLogs(User userOld, User userNew) {
-            StringBuilder sb = new StringBuilder();
-            if (userOld.AreaOfResidenceId != userNew.AreaOfResidenceId) {
-                sb.Append(
-                    "Rejon zamieszkania z zmieniony z " +
-                    userOld.AreaOfResidence.AreaType + " na " +
-                    userNew.AreaOfResidence.AreaType);
-            }
-
-            if(sb.ToString() != "") {
-                UserLog userLog = new UserLog();
-                userLog.Date = DateTime.Now;
-                userLog.Description = sb.ToString();
-                userLog.UserPhoneNumber = userNew.PhoneNumber;
-
-                this.userRepository.AddLog(userLog);
-            }
-        }
     }
 }

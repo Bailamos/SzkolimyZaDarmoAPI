@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Szkolimy_za_darmo_api.Core.Interfaces;
 using Szkolimy_za_darmo_api.Core.Models;
 using Szkolimy_za_darmo_api.Core.Models.Query;
@@ -48,10 +50,11 @@ namespace Szkolimy_za_darmo_api.Persistance
                            .ThenInclude(training => training.Category)
                 .AsQueryable();
 
+            int currentYear = DateTime.Now.Year;
             if (queryObj.AgeTo.HasValue)
-                query = query.Where(v => queryObj.AgeTo > DateTime.Now.Year - v.BirthYear);             
+                query = query.Where(v => v.BirthYear > currentYear - queryObj.AgeTo);           
             if (queryObj.AgeFrom.HasValue)
-                query = query.Where(v => queryObj.AgeFrom < DateTime.Now.Year - v.BirthYear);  
+                query = query.Where(v => v.BirthYear < currentYear - queryObj.AgeTo);  
             if (queryObj.Localizations.Length > 0)
                 query = query.Where(
                     v => queryObj.Localizations.Contains(v.VoivodeshipId));              
@@ -77,10 +80,12 @@ namespace Szkolimy_za_darmo_api.Persistance
             return queryResult;
              
         }
+
         public async Task<bool> CheckIfUserExists(string phoneNumber) {
             return await context.Users.AnyAsync(
                 user => user.PhoneNumber == phoneNumber);
         }
+
         public async Task<User> GetOne(string phoneNumber)
         {
             return await context.Users
@@ -121,13 +126,99 @@ namespace Szkolimy_za_darmo_api.Persistance
         {
             return await context.UserLog
                 .Where(log => log.UserPhoneNumber == userPhoneNumber)
-                .OrderByDescending(log => log.Date)
+                .OrderByDescending(log => log.ChangeDate)
                 .ToListAsync();
         }
 
-        public void AddLog(UserLog log)
-        {
-            context.UserLog.Add(log);
+        public void CreateLogs(string userPhoneNumber, string whoChanged) {
+            var modifiedEntity = context
+                .ChangeTracker
+                .Entries()
+                .Where(p => p.State == EntityState.Modified)
+                .FirstOrDefault();
+                
+            var now = DateTime.Now;
+
+            foreach (var property in modifiedEntity.OriginalValues.Properties) {
+                var originalValue = modifiedEntity.OriginalValues[property].ToString();
+                var currentValue = modifiedEntity.CurrentValues[property].ToString();
+
+                if (originalValue != currentValue && property.Name != "LastUpdate")
+                {
+                    //TODO: mocno zmienić
+                    if (property.Name == "AreaOfResidenceId") {
+                        originalValue = context.AreasOfResidence
+                            .Where(a => a.Id == int.Parse(originalValue))
+                            .FirstOrDefault().AreaType;
+
+                        currentValue = context.AreasOfResidence
+                            .Where(a => a.Id == int.Parse(currentValue))
+                            .FirstOrDefault().AreaType; 
+                    }
+
+                    if (property.Name == "MarketStatusId") {
+                        originalValue = context.MarketStatuses
+                            .Where(a => a.Id == int.Parse(originalValue))
+                            .FirstOrDefault().Status;
+
+                        currentValue = context.MarketStatuses
+                            .Where(a => a.Id == int.Parse(currentValue))
+                            .FirstOrDefault().Status; 
+                    }
+
+                    if (property.Name == "EducationId") {
+                        originalValue = context.Educations
+                            .Where(a => a.Id == int.Parse(originalValue))
+                            .FirstOrDefault().EducationType;
+
+                        currentValue = context.Educations
+                            .Where(a => a.Id == int.Parse(currentValue))
+                            .FirstOrDefault().EducationType; 
+                    }
+
+                    if (property.Name == "SexId") {
+                        originalValue = context.Sexes
+                            .Where(a => a.Id == int.Parse(originalValue))
+                            .FirstOrDefault().Name;
+
+                        currentValue = context.Sexes
+                            .Where(a => a.Id == int.Parse(currentValue))
+                            .FirstOrDefault().Name; 
+                    }
+
+                    if (property.Name == "VoivodeshipId") {
+                        originalValue = context.Voivodeships
+                            .Where(a => a.Id == int.Parse(originalValue))
+                            .FirstOrDefault().VoivodeshipName;
+
+                        currentValue = context.Voivodeships
+                            .Where(a => a.Id == int.Parse(currentValue))
+                            .FirstOrDefault().VoivodeshipName; 
+                    }
+
+                    if (property.Name == "CountyId") {
+                       originalValue = context.Counties
+                            .Where(a => a.Id == int.Parse(originalValue))
+                            .FirstOrDefault().CountyName;
+
+                        currentValue = context.Counties
+                            .Where(a => a.Id == int.Parse(currentValue))
+                            .FirstOrDefault().CountyName; 
+                    }
+
+
+                    UserLog log = new UserLog()
+                    {
+                        PropertyName = property.Name,
+                        OldValue = originalValue,
+                        NewValue = currentValue,
+                        ChangeDate = now,
+                        UserPhoneNumber = userPhoneNumber,
+                        ByWho = whoChanged
+                    };
+                    context.UserLog.Add(log);
+                }
+            }
         }
     }
 }
